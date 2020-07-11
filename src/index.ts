@@ -6,14 +6,22 @@ let browser: Browser = new Browser("Chrome");
 
 (async function(){
     let driver = browser.Initialize()
+    await driver.manage().window().maximize();
+           // await driver.doTypeEnter("name:q", "searchText");
+        //await driver.assertElementVisible("id:result-stats")
     try{
-        await driver.manage().window().maximize();
-        await driver.navigate().to('http://google.com');
-        await driver.doTypeEnter("name:q", "searchText");
-        await driver.assertElementVisible("id:result-stats")
+        await driver.doNavigate('https://code.codersheet.co/');
+        await driver.assertTextVisible("tag:p","Looks like you are not passing any pad-id")
+
+        await driver.doNavigate('https://code.codersheet.co/?id=123');
+        await driver.assertTextVisible("tag:p","This interview doesnt exist !")
+
+        await driver.doNavigate('https://code.codersheet.co/?id=5ed2e332d88a8b46ab3b770e');
+        await driver.assertTextVisible("tag:p","Start at Anytime")
+        
         console.log("Quit")
+        driver.quit()
     } catch(err){
         console.log(`Failed... with error ${err}`)
     }
-     driver.quit()
 })();
