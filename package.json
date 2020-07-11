@@ -13,13 +13,18 @@
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags"
- },
-  "files": ["lib/**/*"],
+  },
+  "files": [
+    "lib/**/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dipankar08/simplewebtest.git"
   },
-  "keywords": ["Hello", "Greeter"],
+  "keywords": [
+    "Hello",
+    "Greeter"
+  ],
   "author": "DIPANKAR",
   "license": "ISC",
   "bugs": {
@@ -27,9 +32,18 @@
   },
   "homepage": "https://github.com/dipankar08/simplewebtest#readme",
   "devDependencies": {
+    "jest": "^26.1.0",
     "prettier": "^2.0.5",
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.9.6"
+  },
+  "dependencies": {
+    "@types/chai": "^4.2.11",
+    "@types/chromedriver": "^81.0.0",
+    "@types/selenium-webdriver": "^4.0.9",
+    "chromedriver": "^83.0.1",
+    "node-dutils": "^1.0.9",
+    "selenium-webdriver": "^4.0.0-alpha.7"
   }
 }
