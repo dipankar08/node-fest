@@ -41,8 +41,10 @@ WebDriver.prototype.assertTextVisible = async function (target: string, text:str
 	var data1 =''
 	//console.log(data)
 	for(let x of data){
+		if(x.isDisplayed()){
 		var t = await x.getText()
 		data1 += t
+		}
 	}
 
     if((data1.toLowerCase().includes(text.toLowerCase()))){

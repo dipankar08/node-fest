@@ -14,10 +14,12 @@ let browser: Browser = new Browser("Chrome");
         await driver.assertTextVisible("tag:p","Looks like you are not passing any pad-id")
 
         await driver.doNavigate('https://code.codersheet.co/?id=123');
-        await driver.assertTextVisible("tag:p","This interview doesnt exist !")
+        await driver.assertTextVisible("tag:body","This interview doesnt exist !")
 
         await driver.doNavigate('https://code.codersheet.co/?id=5ed2e332d88a8b46ab3b770e');
-        await driver.assertTextVisible("tag:p","Start at Anytime")
+        await driver.assertTextVisible("tag:body","Start at Anytime")
+
+        await driver.doSingleClick("tag:button")
         
         console.log("Quit")
         driver.quit()
