@@ -19,3 +19,6 @@ The whole pupose of this freamwork to be productive by quickly writing testcase 
 - Each line of this testcase file would be a test case. 
 - Each test case conatins a sequence of events like open a page or click a button is an evenets, seperated by =>. e.f evnet1 => event2 => evenet3 ..
 - each events can either be an "action" or an "verify" and a collection of arguments, seperated by ":". For example: open:<url> is a an event where "open" is the name of the event and <url> is the url to be open. 
+  
+## Example:
+![Example](https://i.ibb.co/9s5SWWn/Screenshot-2020-07-13-at-02-36-42.png)
