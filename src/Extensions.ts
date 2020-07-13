@@ -26,6 +26,7 @@ WebDriver.prototype.doTypeEnter = async function (target: String, text: string) 
 
 WebDriver.prototype.doSingleClick = async function (target: String) {
 	const driver = this as WebDriver;
+	await sleep(1*1000)
 	await driver.findElement(resolveTarget(target)).click();
 };
 
@@ -36,7 +37,7 @@ WebDriver.prototype.assertElementVisible = async function (target: String) {
 
 WebDriver.prototype.assertTextVisible = async function (target: string, text:string) {
 	const driver = this as WebDriver;
-	await sleep(2*1000)
+	await sleep(1*1000)
 	let data = await driver.findElements(resolveTarget(target))
 	var data1 =''
 	//console.log(data)
@@ -47,7 +48,9 @@ WebDriver.prototype.assertTextVisible = async function (target: string, text:str
 		}
 	}
 
-    if((data1.toLowerCase().includes(text.toLowerCase()))){
+	let data2 = data1.toLowerCase()
+	let text2 = text.toLowerCase()	
+    if( data2.indexOf(text2) != -1 ){
 		console.log("assertTextVisible: PASS")
 	} else {
 		console.log(data)
@@ -57,19 +60,19 @@ WebDriver.prototype.assertTextVisible = async function (target: string, text:str
 };
 
 function resolveTarget(sel:String):By{
-	if(sel.startsWith("id:")){
-		return  By.id(sel.replace("id:",""));
+	if(sel.startsWith("id_")){
+		return  By.id(sel.replace("id_",""));
 	}
-	if(sel.startsWith("name:")){
-		return  By.name(sel.replace("name:",""));
+	if(sel.startsWith("name_")){
+		return  By.name(sel.replace("name_",""));
 	}
-	if(sel.startsWith("class:")){
-		return By.className(sel.replace("class:",""));
+	if(sel.startsWith("class_")){
+		return By.className(sel.replace("class_",""));
 	}
-	if(sel.startsWith("tag:")){
-		return By.tagName(sel.replace("tag:",""));
+	if(sel.startsWith("tag_")){
+		return By.tagName(sel.replace("tag_",""));
 	}
-	return  By.id(sel.replace("id:",""));
+	throw "Invalid Target found"+sel
 }
 
 function sleep(ms:number) {

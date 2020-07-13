@@ -1,0 +1,4 @@
+# This is a test fine and i put under the directory so that i can debug uisng VS Code.
+#open:http://google.com => wait:1000 => open:http://google.com => wait:1000=> open:http://google.com => wait:1000
+#open:http://google.com => wait:100 => typeWithEnter:name_q:DIAPNAKR => verifyBodyText:DIPANKAR
+open:http://google.com => wait:100 => type:name_q:DIAPNAKR => click:name_btnK => verifyBodyText:DIPANKAR => verifyText:id_hdtb:Images
