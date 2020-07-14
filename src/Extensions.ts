@@ -11,6 +11,7 @@ declare module "selenium-webdriver" {
 		assertTextVisible(target: String, text: string): Promise<void>;
 		assertAttr(target: String, attrKey: string, attrValue: string): Promise<void>;
 		doAlert(target: String): Promise<void>;
+		doReset(): Promise<void>;
 	}
 }
 WebDriver.prototype.doNavigate = async function (target: string) {
@@ -25,6 +26,13 @@ WebDriver.prototype.doTypeEnter = async function (target: String, text: string) 
 	const driver = this as WebDriver;
 	await driver.findElement(resolveTarget(target)).sendKeys(text + Key.ENTER);
 };
+WebDriver.prototype.doReset = async function () {
+	const driver = this as WebDriver;
+	await driver.manage().deleteAllCookies();
+	console.log("You have deleted all the cookies")
+};
+
+
 
 WebDriver.prototype.doSingleClick = async function (target: String) {
 	const driver = this as WebDriver;

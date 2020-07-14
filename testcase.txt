@@ -20,8 +20,12 @@ open:http://localhost:8080/?id=5f0919de55fb9147c408c81f&login_token=fake_token=>
 # test login by session & join & end flow
 open:http://localhost:8080/?id=5f0919de55fb9147c408c81f => wait:1000 => verifyAttr:name_name:value:dutta.dipankar08+test@gamil.com => click:class_join_btn =>verifyBodyText:dutta.dipankar08+test => click:class_mdi-location-exit
 
-# Test Join and End 
+# Test Join and End after login
 open:http://localhost:8080/?id=5f0919de55fb9147c408c81f => wait:1000 => verifyAttr:name_name:value:JOHN => click:class_join_btn =>verifyBodyText:dutta.dipankar08+test => click:class_mdi-location-exit => alert:ok => wait:1000 => verifyBodyText:How is your interview expeience => click:css_.v-rating button:first-child => type:name_feedback:Automation  =>click:css_.submit_btn => wait:1000 => verifyBodyText:Thanks for your feedback
+
+# RESET and try to join as candiadte
+reset => open:http://localhost:8080/?id=5f0919de55fb9147c408c81f => wait:1000 => verifyAttr:name_name:value:JOHN => click:class_join_btn =>verifyBodyText:JOHN => click:class_mdi-location-exit => alert:ok => wait:1000 => verifyBodyText:How is your interview expeience => click:css_.v-rating button:first-child => type:name_feedback:Automation  =>click:css_.submit_btn => wait:1000 => verifyBodyText:Thanks for your feedback
+
 
 
 

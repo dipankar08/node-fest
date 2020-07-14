@@ -61,6 +61,7 @@ function sleep(ms: number) {
         'verifyBodyText', // verify the text anywhere.
         'verifyAttr', // verify attributes
         'alert', // perfrom action on alert
+        'reset', // delete all cookies and reset
     ]
     var contents = fs.readFileSync(context.file, 'utf8');
     var lines = contents.split("\n");
@@ -136,6 +137,9 @@ function sleep(ms: number) {
                         break;
                     case 'alert':
                         await driver.doAlert(cmd1.args[0])
+                        break;
+                    case 'reset':
+                        await driver.doReset()
                         break;
            
                 }
