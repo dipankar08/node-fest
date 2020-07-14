@@ -1,0 +1,22 @@
+# Write test case here
+# PreCall Test
+
+# Test Precall Token sent call.
+# open:http://localhost:8080/?id=5f03bfb055fb9147c4fa9cd0 => verifyBodyText:Interview with Google =>click:css_a.invite_show_btn =>type:css_.invite_input input:dutta.dipankar08+test@gmail.com=> click:css_button.mdi-send => verifyBodyText:Sending token ... =>wait:5000 =>verifyBodyText:token sent
+
+# Test opening invite links( wrong URL and Right URL)
+#open:http://localhost:8080/?id=5f0919de55fb9147c408c81f&login_token=wyk3kFeBLMo0iP =>verifyBodyText:Not able to login as wrong token was send.
+
+# test login by token
+open:http://localhost:8080/?id=5f0919de55fb9147c408c81f&login_token=fake_token=>verifyBodyText:You have logged in as dutta.dipankar08+test@gamil.com
+
+# test login by session.
+open:http://localhost:8080/?id=5f0919de55fb9147c408c81f => wait:1000 => verifyAttr:name_name:value:dutta.dipankar08+test@gamil.com
+
+
+
+
+#open:https://code.codersheet.co/ => verifyBodyText:Looks like you are not passing any pad-id.
+#open:https://code.codersheet.co/?id=5f03bfb055fb9147c4fa9cd1 => verifyBodyText:This interview doesnt exist !
+#open:https://code.codersheet.co/?id=5f03bfb055fb9147c4fa9cd0 => verifyBodyText:Interview with Google =>type:name_name:DIPANKAR=> click:class_join_btn =>verifyBodyText:dutta.dipankar08+test@gmail.com
+

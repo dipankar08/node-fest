@@ -58,7 +58,8 @@ function sleep(ms: number) {
         'type', // type in a input
         'typeWithEnter', // type an input and press enter
         'verifyText', // verify text for an element
-        'verifyBodyText' // verify the text anywhere.
+        'verifyBodyText', // verify the text anywhere.
+        'verifyAttr', // verify attributes
     ]
     var contents = fs.readFileSync(context.file, 'utf8');
     var lines = contents.split("\n");
@@ -78,7 +79,7 @@ function sleep(ms: number) {
                 throw "Error";
             }
             if (!_.contains(VALID_COAMMD, tokens[0])) {
-                console.log(chalk.red(`[${i + 1}] Invalid Commands found in ${tokens}`));
+                console.log(chalk.red(`[${i + 1}] Invalid Commands found in =>${tokens[0]}`));
                 throw "Error";
             }
             var sCommand: Command = {
@@ -112,6 +113,10 @@ function sleep(ms: number) {
                         await driver.assertTextVisible("tag_body", cmd1.args.join(":"))
                         console.log(chalk.green("Verification Passed!"));
                         break;
+                    case 'verifyAttr':
+                        await driver.assertAttr(cmd1.args[0], cmd1.args[1], cmd1.args.slice(2).join(":"))
+                        console.log(chalk.green("Verification Passed!"));
+                        break;
                     case 'verifyText':
                         await driver.assertTextVisible(cmd1.args[0], cmd1.args.slice(1).join(":"))
                         console.log(chalk.green("Verification Passed!"));
@@ -136,6 +141,7 @@ function sleep(ms: number) {
         }
     }
     console.log("Quit")
+    //await sleep(5000)
     driver.quit()
 
     let result = util.format("\n\n\

@@ -9,6 +9,7 @@ declare module "selenium-webdriver" {
 
 		assertElementVisible(target:String):Promise<void>;
 		assertTextVisible(target:String, text:string):Promise<void>;
+		assertAttr(target:String, attrKey:string, attrValue:string):Promise<void>;		
 	}
 }
 WebDriver.prototype.doNavigate = async function (target: string) {
@@ -33,6 +34,16 @@ WebDriver.prototype.doSingleClick = async function (target: String) {
 WebDriver.prototype.assertElementVisible = async function (target: String) {
 	const driver = this as WebDriver;
 	await (await driver.findElement(resolveTarget(target))).isDisplayed();
+};
+WebDriver.prototype.assertAttr = async function (target:String, attrKey:string, attrValue:string) {
+	const driver = this as WebDriver;
+	let ele = await driver.findElement(resolveTarget(target))
+	let value = await ele.getAttribute(attrKey)
+	if( value == attrValue ){
+		console.log("assertAttr: PASS")
+	} else {
+		throw `assertAttr fails for ${target}, Found : ${value} where as Expected: ${attrValue}`
+	}
 };
 
 WebDriver.prototype.assertTextVisible = async function (target: string, text:string) {
@@ -71,6 +82,9 @@ function resolveTarget(sel:String):By{
 	}
 	if(sel.startsWith("tag_")){
 		return By.tagName(sel.replace("tag_",""));
+	}
+	if(sel.startsWith("css_")){
+		return By.css(sel.replace("css_",""));
 	}
 	throw "Invalid Target found"+sel
 }
