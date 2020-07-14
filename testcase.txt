@@ -10,8 +10,12 @@
 # test login by token
 open:http://localhost:8080/?id=5f0919de55fb9147c408c81f&login_token=fake_token=>verifyBodyText:You have logged in as dutta.dipankar08+test@gamil.com
 
-# test login by session.
-open:http://localhost:8080/?id=5f0919de55fb9147c408c81f => wait:1000 => verifyAttr:name_name:value:dutta.dipankar08+test@gamil.com
+# test login by session & join
+open:http://localhost:8080/?id=5f0919de55fb9147c408c81f => wait:1000 => verifyAttr:name_name:value:dutta.dipankar08+test@gamil.com => click:class_join_btn =>verifyBodyText:dutta.dipankar08+test@gmail.com
+
+
+# test 
+
 
 
 
