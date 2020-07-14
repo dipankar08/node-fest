@@ -60,6 +60,7 @@ function sleep(ms: number) {
         'verifyText', // verify text for an element
         'verifyBodyText', // verify the text anywhere.
         'verifyAttr', // verify attributes
+        'alert', // perfrom action on alert
     ]
     var contents = fs.readFileSync(context.file, 'utf8');
     var lines = contents.split("\n");
@@ -89,6 +90,9 @@ function sleep(ms: number) {
             testCase.commandList.push(sCommand)
         }
         TestCaseList.push(testCase);
+    }
+    if(program.line){
+        TestCaseList = TestCaseList.filter(x=>x.lineNo == program.line)
     }
     console.log(chalk.blue(`Building testcase complete for file. TestCase counts: cmd ${TestCaseList.length}`));
 
@@ -129,6 +133,9 @@ function sleep(ms: number) {
                         break;
                     case 'typeWithEnter':
                         await driver.doTypeEnter(cmd1.args[0], cmd1.args.slice(1).join(":"))
+                        break;
+                    case 'alert':
+                        await driver.doAlert(cmd1.args[0])
                         break;
            
                 }
