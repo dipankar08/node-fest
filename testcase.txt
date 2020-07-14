@@ -9,7 +9,7 @@ open:https://code.codersheet.co/?id=5f03bfb055fb9147c4fa9cd1 => verifyBodyText:T
 open:https://code.codersheet.co/?id=5f03bfb055fb9147c4fa9cd0 => verifyBodyText:Interview with Google =>type:name_name:DIPANKAR=> click:class_join_btn =>verifyBodyText:DIPANKAR
 
 # Test Precall Token sent call.
-open:http://localhost:8080/?id=5f03bfb055fb9147c4fa9cd0 => verifyBodyText:Interview with Google =>click:css_a.invite_show_btn =>type:css_.invite_input input:dutta.dipankar08+test@gmail.com=> click:css_button.mdi-send => verifyBodyText:Sending token ... =>wait:5000 =>verifyBodyText:token sent
+open:http://localhost:8080/?id=5f03bfb055fb9147c4fa9cd0 => verifyBodyText:Interview with Google =>click:css_a.invite_show_btn =>type:css_.invite_input input:dutta.dipankar08+test@gmail.com=> click:css_button.mdi-send => verifyBodyText:Sending token ... =>wait:10000 =>verifyBodyText:token sent
 
 # Test opening invite links( wrong URL and Right URL)
 #open:http://localhost:8080/?id=5f0919de55fb9147c408c81f&login_token=wyk3kFeBLMo0iP =>verifyBodyText:Not able to login as wrong token was send.
@@ -21,10 +21,10 @@ open:http://localhost:8080/?id=5f0919de55fb9147c408c81f&login_token=fake_token=>
 open:http://localhost:8080/?id=5f0919de55fb9147c408c81f => wait:1000 => verifyAttr:name_name:value:dutta.dipankar08+test@gamil.com => click:class_join_btn =>verifyBodyText:dutta.dipankar08+test => click:class_mdi-location-exit
 
 # Test Join and End after login
-open:http://localhost:8080/?id=5f0919de55fb9147c408c81f => wait:1000 => verifyAttr:name_name:value:JOHN => click:class_join_btn =>verifyBodyText:dutta.dipankar08+test => click:class_mdi-location-exit => alert:ok => wait:1000 => verifyBodyText:How is your interview expeience => click:css_.v-rating button:first-child => type:name_feedback:Automation  =>click:css_.submit_btn => wait:1000 => verifyBodyText:Thanks for your feedback
+open:http://localhost:8080/?id=5f0919de55fb9147c408c81f => wait:1000 => verifyAttr:name_name:value:JOHN => click:class_join_btn => verifyBodyText:dutta.dipankar08+test => wait:500 => click:class_mdi-location-exit => wait:500 => alert:ok => wait:1000 => verifyBodyText:How is your interview expeience => click:css_.v-rating button:first-child => type:name_feedback:Automation  =>click:css_.submit_btn => wait:1000 => verifyBodyText:Thanks for your feedback
 
 # RESET and try to join as candiadte
-reset => open:http://localhost:8080/?id=5f0919de55fb9147c408c81f => wait:1000 => verifyAttr:name_name:value:JOHN => click:class_join_btn =>verifyBodyText:JOHN => click:class_mdi-location-exit => alert:ok => wait:1000 => verifyBodyText:How is your interview expeience => click:css_.v-rating button:first-child => type:name_feedback:Automation  =>click:css_.submit_btn => wait:1000 => verifyBodyText:Thanks for your feedback
+reset => open:http://localhost:8080/?id=5f0919de55fb9147c408c81f => wait:1000 => verifyAttr:name_name:value:JOHN => click:class_join_btn =>verifyBodyText:JOHN => click:class_mdi-location-exit => wait:200 => alert:ok  => verifyBodyText:How is your interview expeience => click:css_.v-rating button:first-child => type:name_feedback:Automation  =>click:css_.submit_btn => wait:1000 => verifyBodyText:Thanks for your feedback
 
 
 

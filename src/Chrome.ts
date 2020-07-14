@@ -12,6 +12,7 @@ export class Chrome {
     public Initialize(): WebDriver {
         let chromeOptions = new Options();
         chromeOptions.addArguments('disable-infobars');
+        chromeOptions.addArguments("--use-fake-ui-for-media-stream=1");
         let browser = new Builder()
             .withCapabilities(Capabilities.chrome())
             .setChromeOptions(chromeOptions)

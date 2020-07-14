@@ -42,16 +42,22 @@ WebDriver.prototype.doSingleClick = async function (target: String) {
 
 WebDriver.prototype.doAlert = async function (action: String) {
 	const driver = this as WebDriver;
+	sleep(500)
 	// working with alerts.
-	let alert = await driver.switchTo().alert();
-	if (action == "ok") {
-		// for clicking on ok button
-		alert.accept();
-	} else if (action == 'cancel') {
-		// for clicking on cancel button
-		alert.dismiss();
-	} else {
-		throw ("Inavlid Alert or you send a wrong command")
+	try{
+		let alert = await driver.switchTo().alert();
+		if (action == "ok") {
+			// for clicking on ok button
+			alert.accept();
+		} else if (action == 'cancel') {
+			// for clicking on cancel button
+			alert.dismiss();
+		} else {
+			throw ("Inavlid Alert or you send a wrong command")
+			this.doAlert(action)
+		}
+	} catch(e){
+
 	}
 	/*
 	// for getting alert text message
