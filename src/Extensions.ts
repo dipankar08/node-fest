@@ -100,7 +100,8 @@ WebDriver.prototype.assertTextVisible = async function (target: string, text: st
 	let data2 = data1.toLowerCase()
 	let text2 = text.toLowerCase()
 	if (data2.indexOf(text2) != -1) {
-		console.log("assertTextVisible: PASS")
+		//console.log("assertTextVisible: PASS")
+		return
 	} else {
 		console.log(data)
 		console.log(data1)

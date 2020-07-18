@@ -27,7 +27,7 @@ function sleep(ms: number) {
         .parse(process.argv);
 
 
-    //program.file = "./sample.txt"
+    program.file = "./sample.txt"
     //program.line = 5;
 
     var context = {
@@ -41,6 +41,7 @@ function sleep(ms: number) {
     }
 
     interface Command {
+        line: number,
         name: string,
         args: Array<any>
     }
@@ -66,15 +67,37 @@ function sleep(ms: number) {
     var contents = fs.readFileSync(context.file, 'utf8');
     var lines = contents.split("\n");
     var TestCaseList = Array<TestCase>()
+
+    var testCase:TestCase|null = null;
     for (let i = 0; i < lines.length; i++) {
         let line: string = lines[i].trim();
-        if (line.startsWith("#") || line.length == 0) {
+        //remove comments
+        line = line.replace(/#.*/,"").trim()
+        //empty line.
+        if (line.length == 0) {
             continue;
         }
-        var testCase: TestCase = { lineNo: i + 1, commandList: [] }
+        if(line.endsWith("=>")){
+            throw  `Invalid Test input in line ${i+1} as the lines ends with =>`
+        }
+
+        if(!line.startsWith("=>")){
+            // old test case
+             if(testCase != null){
+                TestCaseList.push(testCase);
+             }
+             testCase= { lineNo: i + 1, commandList: [] }
+        }
+        // process command 
+        if(testCase == null){
+            throw "Syntax error while processing"
+        }
         var commands = line.split("=>")
         for (var cmd of commands) {
             cmd = cmd.trim()
+            if(cmd.length == 0){
+                continue
+            }
             let tokens = cmd.split(":").map(x => x.trim())
             if (tokens.length == 0) {
                 console.log(chalk.red(`[${i + 1}]Invalid Token in ${cmd}`));
@@ -85,13 +108,16 @@ function sleep(ms: number) {
                 throw "Error";
             }
             var sCommand: Command = {
+                line:i+1,
                 name: tokens[0],
                 args: tokens.slice(1)
             }
             testCase.commandList.push(sCommand)
         }
-        TestCaseList.push(testCase);
     }
+    if(testCase != null){
+        TestCaseList.push(testCase);
+     }
     if(program.line){
         TestCaseList = TestCaseList.filter(x=>x.lineNo == program.line)
     }
@@ -102,11 +128,12 @@ function sleep(ms: number) {
     await driver.manage().window().maximize();
     var pass_count = 0;
     var fail_count = 0;
+    var cmd_count  =0;
     for (var tc of TestCaseList) {
         try {
-            console.log(chalk.blue(`[${tc.lineNo}] Executing test case : ${JSON.stringify(tc)}..`));
+            console.log(chalk.blue(`[${tc.lineNo}] Executing test case ...`));
             for (var cmd1 of tc.commandList) {
-                console.log(chalk.blue(`Processing ${JSON.stringify(cmd1)}`));
+                console.log(chalk.blue(`[${tc.lineNo}] Processing command at line $${cmd1.line}`));
                 switch (cmd1.name) {
                     case 'wait':
                         await sleep(parseInt(cmd1.args[0]));
@@ -116,15 +143,15 @@ function sleep(ms: number) {
                         break;
                     case 'verifyBodyText':
                         await driver.assertTextVisible("tag_body", cmd1.args.join(":"))
-                        console.log(chalk.green("Verification Passed!"));
+                        console.log(chalk.green(`[${cmd1.line}] assertTextVisible Passed!`));
                         break;
                     case 'verifyAttr':
                         await driver.assertAttr(cmd1.args[0], cmd1.args[1], cmd1.args.slice(2).join(":"))
-                        console.log(chalk.green("Verification Passed!"));
+                        console.log(chalk.green(`[${cmd1.line}] assertAttr Passed!`));
                         break;
                     case 'verifyText':
                         await driver.assertTextVisible(cmd1.args[0], cmd1.args.slice(1).join(":"))
-                        console.log(chalk.green("Verification Passed!"));
+                        console.log(chalk.green(`[${cmd1.line}] assertTextVisible Passed!`));
                         break;
                     case 'click':
                         await driver.doSingleClick(cmd1.args.join(":"))
@@ -141,8 +168,8 @@ function sleep(ms: number) {
                     case 'reset':
                         await driver.doReset()
                         break;
-           
                 }
+                cmd_count++;
             }
             pass_count++;
         } catch (err) {
@@ -155,24 +182,22 @@ function sleep(ms: number) {
     //await sleep(5000)
     driver.quit()
 
-    let result = util.format("\n\n\
-=======================================================\n\
-                        SUMMARY                        \n\
-=======================================================\n\
-Pass Count: %s\n\
-Fail Count: %s\n\
-Total TC: %s\n\
-Pass Percentage: %s\%\n\
-=======================================================\n\n\
-    ", pass_count, fail_count, pass_count + fail_count, (pass_count * 100 / (pass_count + fail_count)))
+    let result = util.format(`
+
+=======================================================
+                        SUMMARY                        
+=======================================================
+Total Command exeuted ${cmd_count}
+Pass Count: ${pass_count}
+Fail Count: ${fail_count}
+Total TC: ${pass_count + fail_count}
+Pass Percentage: ${pass_count * 100 / (pass_count + fail_count)}\%
+=======================================================`)
     if (fail_count == 0) {
         console.log(chalk.green(result));
     } else {
         console.log(chalk.red(result));
     }
-
-
-
     /*
     var lineIdx = 0;
     if(program.line){
