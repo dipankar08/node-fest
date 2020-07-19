@@ -1,33 +1,39 @@
 # Write test case here
 # PreCall Test
 
+$server = http://localhost:8080
+$test_id = 5f03bfb055fb9147c4fa9cd0
 # erro cases
-open:https://code.codersheet.co/ => verifyBodyText:Looks like you are not passing any pad-id.
-open:https://code.codersheet.co/?id=5f03bfb055fb9147c4fa9cd1 => verifyBodyText:This interview doesnt exist !
+open:{{server}} => verifyBodyText:Looks like you are not passing any pad-id.
+open:{{server}}?id=5f03bfb055fb9147c4fa9cd1 => verifyBodyText:This interview doesnt exist !
+
+# common flow
+$login_flow =  open:{{server}}?id={{test_id}} => verifyBodyText:Interview with Google =>type:name_name:DIPANKAR=> click:class_join_btn => verifyBodyText:RUN
+$exit_flow = click:class_mdi-location-exit => wait:500 => alert:ok => wait:1000 => verifyBodyText:How is your interview expeience => click:css_.v-rating button:first-child => type:name_feedback:Automation  =>click:css_.submit_btn => wait:1000 => verifyBodyText:Thanks for your feedback
 
 # join without login
-open:https://code.codersheet.co/?id=5f03bfb055fb9147c4fa9cd0 => verifyBodyText:Interview with Google =>type:name_name:DIPANKAR=> click:class_join_btn =>verifyBodyText:DIPANKAR
+{{login_flow}}
 
 # Test Precall Token sent call.
-open:http://localhost:8080/?id=5f03bfb055fb9147c4fa9cd0 => verifyBodyText:Interview with Google =>click:css_a.invite_show_btn =>type:css_.invite_input input:dutta.dipankar08+test@gmail.com=> click:css_button.mdi-send => verifyBodyText:Sending token ... =>wait:10000 =>verifyBodyText:token sent
+open:{{server}}?id={{test_id}} => verifyBodyText:Interview with Google =>click:css_a.invite_show_btn =>type:css_.invite_input input:dutta.dipankar08+test@gmail.com=> click:css_button.mdi-send => verifyBodyText:Sending token ... =>wait:10000 =>verifyBodyText:token sent
 
 # Test opening invite links( wrong URL and Right URL)
-#open:http://localhost:8080/?id=5f0919de55fb9147c408c81f&login_token=wyk3kFeBLMo0iP =>verifyBodyText:Not able to login as wrong token was send.
+#open:{{server}}?id={{test_id}}&login_token=wyk3kFeBLMo0iP =>verifyBodyText:Not able to login as wrong token was send.
 
 # test login by fake token
-open:http://localhost:8080/?id=5f0919de55fb9147c408c81f&login_token=fake_token=>verifyBodyText:You have logged in as dutta.dipankar08+test@gamil.com
+open:{{server}}?id={{test_id}}&login_token=fake_token=>verifyBodyText:You have logged in as dutta.dipankar08+test@gamil.com
 
 # test login by session & join & end flow
-open:http://localhost:8080/?id=5f0919de55fb9147c408c81f => wait:1000 => verifyAttr:name_name:value:dutta.dipankar08+test@gamil.com => click:class_join_btn =>verifyBodyText:dutta.dipankar08+test => click:class_mdi-location-exit
+open:{{server}}?id={{test_id}} => wait:1000 => verifyBodyText:dutta.dipankar08+test@gamil.com => type:name_name:DIPANKAR => click:class_join_btn =>verifyBodyText:RUN => click:class_mdi-location-exit
+
 
 # Test Join and End after login
-open:http://localhost:8080/?id=5f0919de55fb9147c408c81f => wait:1000 => verifyAttr:name_name:value:JOHN => click:class_join_btn => verifyBodyText:dutta.dipankar08+test => wait:500 => click:class_mdi-location-exit => wait:500 => alert:ok => wait:1000 => verifyBodyText:How is your interview expeience => click:css_.v-rating button:first-child => type:name_feedback:Automation  =>click:css_.submit_btn => wait:1000 => verifyBodyText:Thanks for your feedback
+open:{{server}}?id={{test_id}} => wait:1000  => type:name_name:DIPANKAR => click:class_join_btn => verifyBodyText:RUN => wait:500 => {{exit_flow}}
 
 # RESET and try to join as candiadte
-reset => open:http://localhost:8080/?id=5f0919de55fb9147c408c81f => wait:1000 => verifyAttr:name_name:value:JOHN => click:class_join_btn =>verifyBodyText:JOHN => click:class_mdi-location-exit => wait:200 => alert:ok  => verifyBodyText:How is your interview expeience => click:css_.v-rating button:first-child => type:name_feedback:Automation  =>click:css_.submit_btn => wait:1000 => verifyBodyText:Thanks for your feedback
+reset => open:{{server}}?id={{test_id}} => wait:1000 => verifyNoBodyText:dutta.dipankar08+test@gamil.com => type:name_name:DIPANKAR=> click:class_join_btn =>verifyBodyText:RUN => {{exit_flow}}
 
-
-
-
+# Login & Exit
+{{login_flow}} => {{exit_flow}}
 
 

@@ -9,6 +9,7 @@ declare module "selenium-webdriver" {
 
 		assertElementVisible(target: String): Promise<void>;
 		assertTextVisible(target: String, text: string): Promise<void>;
+		assertNoTextVisible(target: String, text: string): Promise<void>;
 		assertAttr(target: String, attrKey: string, attrValue: string): Promise<void>;
 		doAlert(target: String): Promise<void>;
 		doReset(): Promise<void>;
@@ -103,9 +104,30 @@ WebDriver.prototype.assertTextVisible = async function (target: string, text: st
 		//console.log("assertTextVisible: PASS")
 		return
 	} else {
-		console.log(data)
-		console.log(data1)
-		throw `assertTextVisible fails for ${target}`
+		//console.log(data)
+		//console.log(data1)
+		throw `assertTextVisible fails for ${target} for text ${text}`
+	}
+};
+
+WebDriver.prototype.assertNoTextVisible = async function (target: string, text: string) {
+	const driver = this as WebDriver;
+	await sleep(1 * 1000)
+	let data = await driver.findElements(resolveTarget(target))
+	var data1 = ''
+	//console.log(data)
+	for (let x of data) {
+		if (x.isDisplayed()) {
+			var t = await x.getText()
+			data1 += t
+		}
+	}
+	let data2 = data1.toLowerCase()
+	let text2 = text.toLowerCase()
+	if (data2.indexOf(text2) != -1) {
+		throw `assertNoTextVisible fails for ${target} for text ${text}`
+	} else {
+		return;
 	}
 };
 

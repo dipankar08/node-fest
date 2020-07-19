@@ -44,6 +44,7 @@
     "@types/selenium-webdriver": "^4.0.9",
     "@types/underscore": "^1.10.7",
     "chromedriver": "^83.0.1",
+    "micromustache": "^7.1.0",
     "node-dutils": "^1.0.9",
     "selenium-webdriver": "^4.0.0-alpha.7",
     "string-format": "^2.0.0"

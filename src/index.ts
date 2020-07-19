@@ -4,7 +4,7 @@ const chalk = require('chalk');
 const util = require('util');
 const format = require('string-format')
 var program = require('commander');
-
+const { render } = require('micromustache')
 
 
 import { WebDriver, By, Key } from "selenium-webdriver";
@@ -27,14 +27,12 @@ function sleep(ms: number) {
         .parse(process.argv);
 
 
-    program.file = "./sample.txt"
+    // program.file = "./sample.txt"
     //program.line = 5;
 
-    var context = {
-        file: null
-    }
+    var context:any = {}
     if (program.file) {
-        context.file = program.file;
+        context['file'] = program.file;
     } else {
         console.log("You must pass a filepath: (node index.js -s google.com -f ./sample.txt )");
         return;
@@ -60,6 +58,7 @@ function sleep(ms: number) {
         'typeWithEnter', // type an input and press enter
         'verifyText', // verify text for an element
         'verifyBodyText', // verify the text anywhere.
+        'verifyNoBodyText', // this text is not presente
         'verifyAttr', // verify attributes
         'alert', // perfrom action on alert
         'reset', // delete all cookies and reset
@@ -70,13 +69,28 @@ function sleep(ms: number) {
 
     var testCase:TestCase|null = null;
     for (let i = 0; i < lines.length; i++) {
-        let line: string = lines[i].trim();
+        let line: string = lines[i]
+
+        // fix the context
+        line = render(line, context)
+        
         //remove comments
         line = line.replace(/#.*/,"").trim()
         //empty line.
         if (line.length == 0) {
             continue;
         }
+
+
+        if(line.startsWith("$")){
+            line = line.replace("$","")
+            var key = line.substring(0, line.indexOf("=")).trim()
+            var value = line.substring(line.indexOf("=")+1).trim()
+            console.log(`Setting context for ${key} => ${value}`)
+            context[key] = value
+            continue;
+        }
+
         if(line.endsWith("=>")){
             throw  `Invalid Test input in line ${i+1} as the lines ends with =>`
         }
@@ -133,7 +147,7 @@ function sleep(ms: number) {
         try {
             console.log(chalk.blue(`[${tc.lineNo}] Executing test case ...`));
             for (var cmd1 of tc.commandList) {
-                console.log(chalk.blue(`[${tc.lineNo}] Processing command at line $${cmd1.line}`));
+                console.log(chalk.grey(`[${tc.lineNo}] Processing command at line $${cmd1.line} =>${cmd1.name}`));
                 switch (cmd1.name) {
                     case 'wait':
                         await sleep(parseInt(cmd1.args[0]));
@@ -145,6 +159,10 @@ function sleep(ms: number) {
                         await driver.assertTextVisible("tag_body", cmd1.args.join(":"))
                         console.log(chalk.green(`[${cmd1.line}] assertTextVisible Passed!`));
                         break;
+                    case 'verifyNoBodyText':
+                            await driver.assertNoTextVisible("tag_body", cmd1.args.join(":"))
+                            console.log(chalk.green(`[${cmd1.line}] assertTextVisible Passed!`));
+                            break;
                     case 'verifyAttr':
                         await driver.assertAttr(cmd1.args[0], cmd1.args[1], cmd1.args.slice(2).join(":"))
                         console.log(chalk.green(`[${cmd1.line}] assertAttr Passed!`));
