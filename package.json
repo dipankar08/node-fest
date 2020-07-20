@@ -1,6 +1,6 @@
 {
   "name": "simplewebtest",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "A nice greeter",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
