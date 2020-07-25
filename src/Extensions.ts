@@ -1,4 +1,4 @@
-import { WebDriver, By, Key } from "selenium-webdriver";
+import { WebDriver, By, Key, } from "selenium-webdriver";
 
 declare module "selenium-webdriver" {
 	export interface WebDriver {
@@ -21,11 +21,15 @@ WebDriver.prototype.doNavigate = async function (target: string) {
 };
 WebDriver.prototype.doType = async function (target: String, text: string) {
 	const driver = this as WebDriver;
-	await driver.findElement(resolveTarget(target)).sendKeys(text);
+	let ele = await driver.findElement(resolveTarget(target))
+	await ele.clear()
+	await ele.sendKeys(Key.chord(Key.COMMAND, "a"),text);
 };
 WebDriver.prototype.doTypeEnter = async function (target: String, text: string) {
 	const driver = this as WebDriver;
-	await driver.findElement(resolveTarget(target)).sendKeys(text + Key.ENTER);
+	let ele = await driver.findElement(resolveTarget(target))
+	await ele.clear()
+	await ele.sendKeys(Key.chord(Key.COMMAND, "a"), text + Key.ENTER);
 };
 WebDriver.prototype.doReset = async function () {
 	const driver = this as WebDriver;

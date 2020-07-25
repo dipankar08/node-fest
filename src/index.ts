@@ -27,8 +27,8 @@ function sleep(ms: number) {
         .parse(process.argv);
 
 
-    // program.file = "./sample.txt"
-    //program.line = 5;
+    program.file = "./sample.txt"
+    program.line = 14;
 
     var context:any = {}
     if (program.file) {
@@ -133,7 +133,7 @@ function sleep(ms: number) {
         TestCaseList.push(testCase);
      }
     if(program.line){
-        TestCaseList = TestCaseList.filter(x=>x.lineNo == program.line)
+        TestCaseList = TestCaseList.filter(x=>x.lineNo >= program.line)
     }
     console.log(chalk.blue(`Building testcase complete for file. TestCase counts: cmd ${TestCaseList.length}`));
 
@@ -147,7 +147,7 @@ function sleep(ms: number) {
         try {
             console.log(chalk.blue(`[${tc.lineNo}] Executing test case ...`));
             for (var cmd1 of tc.commandList) {
-                console.log(chalk.grey(`[${tc.lineNo}] Processing command at line $${cmd1.line} =>${cmd1.name}`));
+                console.log(chalk.grey(`[${cmd1.line}] Processing command at line $${cmd1.line} =>${cmd1.name}`));
                 switch (cmd1.name) {
                     case 'wait':
                         await sleep(parseInt(cmd1.args[0]));

@@ -3,12 +3,13 @@ $server = http://google.com
  open:{{server}}=> wait:1000 => open:{{server}}=> wait:1000=> open:{{server}}=> wait:1000
  open:{{server}}=> wait:100 => typeWithEnter:name_q:DIAPNAKR => verifyBodyText:DIPANKAR
 
-#open:{{server}} # opening a file.
-#   => wait:100          # you need to wait till the data opened.
-#   => type:name_q:DIAPNAKR
-#   => click:name_btnK 
-#   => verifyBodyText:DIPANKAR 
-#   => verifyText:id_hdtb:Images
+open:{{server}} # opening a file.
+   => wait:100          # you need to wait till the data opened.
+   => type:name_q:DIAPNAKR
+   => type:name_q:DIAPNAKR
+   => click:name_btnK 
+   => verifyBodyText:DIPANKAR 
+   => verifyText:id_hdtb:Images
 
 open:{{server}} # opening a file.
    => wait:100          # you need to wait till the data opened.
@@ -16,3 +17,5 @@ open:{{server}} # opening a file.
    => click:name_btnK 
    => verifyBodyText:DIPANKAR 
    => verifyText:id_hdtb:Images
+
+open:{{server}}=> wait:100 => typeWithEnter:name_q:DIAPNAKR => verifyBodyText:DIPANKAR
