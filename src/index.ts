@@ -27,8 +27,8 @@ function sleep(ms: number) {
         .parse(process.argv);
 
 
-    program.file = "./sample.txt"
-    program.line = 14;
+    //program.file = "./sample.txt"
+    //program.line = 14;
 
     var context:any = {}
     if (program.file) {

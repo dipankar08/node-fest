@@ -23,13 +23,13 @@ WebDriver.prototype.doType = async function (target: String, text: string) {
 	const driver = this as WebDriver;
 	let ele = await driver.findElement(resolveTarget(target))
 	await ele.clear()
-	await ele.sendKeys(Key.chord(Key.COMMAND, "a"),text);
+	await ele.sendKeys(text);
 };
 WebDriver.prototype.doTypeEnter = async function (target: String, text: string) {
 	const driver = this as WebDriver;
 	let ele = await driver.findElement(resolveTarget(target))
 	await ele.clear()
-	await ele.sendKeys(Key.chord(Key.COMMAND, "a"), text + Key.ENTER);
+	await ele.sendKeys(text + Key.ENTER);
 };
 WebDriver.prototype.doReset = async function () {
 	const driver = this as WebDriver;

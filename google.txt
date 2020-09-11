@@ -1,0 +1,1 @@
+open:http://google.com => typeWithEnter:name_q:Dipankar => verifyBodyText:Dipankar

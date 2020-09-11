@@ -1,6 +1,6 @@
 
 import { Options } from "selenium-webdriver/chrome";
-import * as chromeDriver from 'chromedriver';
+const chromeDriver = require('chromedriver');
 import { setDefaultService, ServiceBuilder } from 'selenium-webdriver/chrome';
 import { WebDriver, Builder, Capabilities } from "selenium-webdriver";
 export class Chrome {
