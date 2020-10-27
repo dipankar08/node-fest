@@ -8,11 +8,24 @@ node-fest provides simplest unified automation framework for API, WEB, Android, 
 * Allow write test without any code - You just need to follow some syntax.
 * it takes 1/10000000 efforts to write a testcase than the feature dev.
 
-## Getting started
-1. sudo npm install simplewebtest -g
+## Installation:
+sudo npm install node-fest -g
+
+## Testing APIs
+
+## Testing Web
 2. create a testcase file : vim testcase.txt.
 3. write a test case line: open:http://google.com => typeWithEnter:name_p:DIPANKAR => verifyBodyText: DIAPANKAR.
 4. Run test case by : $ simplewebtest -f ./testcase.txt
+
+## Testing Android
+Under dev -- not yet supported
+
+## Testing iOS
+Under dev -- not yet supported
+
+## Testing Websockets
+Under dev -- not yet supported
 
 ## How to write the testcase?
 The whole pupose of this freamwork to be productive by quickly writing testcase in very compact way. 
