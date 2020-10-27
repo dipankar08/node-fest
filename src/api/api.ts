@@ -26,7 +26,7 @@ function parseCommand():Context{
 
     // For test uncomment this line and run <node bin/cmd.js>
     //program.server = "simplestore.dipankar.co.in"
-    program.file = "/Users/dip/dipankar/node-fest/src/api/sample.txt"
+    //program.file = "/Users/dip/dipankar/node-fest/src/api/sample.txt"
     //program.line = 13;
     if (program.server){
         //console.log("Server:"+program.server);
