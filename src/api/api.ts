@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { Result } from "../common/result";
 import { sleep } from "../common/utils";
 const fs = require('fs');
 var request = require('sync-request');
@@ -25,7 +26,7 @@ function parseCommand():Context{
 
     // For test uncomment this line and run <node bin/cmd.js>
     //program.server = "simplestore.dipankar.co.in"
-    //program.file = "./sample.txt"
+    program.file = "/Users/dip/dipankar/node-fest/src/api/sample.txt"
     //program.line = 13;
     if (program.server){
         //console.log("Server:"+program.server);
@@ -43,11 +44,11 @@ function parseCommand():Context{
 }
 
 type TestCase ={
-    line:number,
-    method:string,
-    url:string,
-    data:any,
-    expected:string,
+    line:number, // file line number
+    method:string, // get or post
+    url:string, // get or post url
+    data:any, // post data it can be any thing based on the type
+    expected:string, // expected regex 
 
     type: 'sleep'|'setup'|'context'|'tc',
     context:any,
@@ -55,7 +56,7 @@ type TestCase ={
 
 function build_test_from_line(line:string, i:number):TestCase{
     var tc:TestCase={
-        line:0, method:'get', url:'', data:{}, expected:'#',type:'tc', context:{}
+        line:0, method:'get', url:'', data:'', expected:'#',type:'tc', context:{}
     }
     tc['line'] = i+1;
     try{
@@ -137,6 +138,7 @@ async function run_test_case(testcase:Array<TestCase>){
         } catch(e){
             console.log(e);
             console.log(chalk.blue(util.format('[ERROR/%s] Invalid json payload:%s',tc.line, tc.data)));
+            result.markFail();
         }
         try{
             tc.url = render(tc.url, context);

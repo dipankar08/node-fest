@@ -1,0 +1,13 @@
+$server => simplestore.dipankar.co.in
+GET  => http://{{server}}/api/test0/test => 404 - We have not yet support this api
+POST => http://{{server}}/api/test0/create => {"name":"dip","count":1} => success
+
+sleep 2
+
+!POST => http://{{server}}/api/test0/create => {"name":"dip","count":1} => "_id":"(?<id1>.*?)"
+!POST => http://{{server}}/api/test0/create => {"name":"dip","count":1} => "_id":"(?<id2>.*?)"
+!GET => http://{{server}}/api/test0/find?id={{id1}}  => Find successfully with 1 items
+GET => http://{{server}}/api/test0/find?id={{id1}}  => success
+GET => http://{{server}}/api/test0/find?id={{id2}}  => success
+POST => http://{{server}}/api/test0/create => {"idd":"{{id2}}"} => success
+GET => http://simplestore.dipankar.co.in/api/system_payment/stripe => TypeError: Cannot read property 'object' of undefined

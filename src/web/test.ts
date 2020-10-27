@@ -1,4 +1,4 @@
-import { SWT } from "./api";
+import { SWT } from "./swt";
 async function test() {
     let swt = new SWT()
     await swt.initChome();

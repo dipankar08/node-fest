@@ -2,7 +2,7 @@ const util = require('util');
 const chalk = require('chalk');
 const format = require('string-format')
 
-class Result{
+export class Result{
     pass_count:number  = 0
     fail_count:number =  0
     total_count:number = 0
