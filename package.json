@@ -48,9 +48,10 @@
     "node-dutils": "^1.0.9",
     "selenium-webdriver": "^4.0.0-alpha.7",
     "string-format": "^2.0.0",
-    "chromedriver":"^85.0.1"
+    "chromedriver": "^85.0.1"
   },
   "bin": {
-    "simplewebtest": "lib/index.js"
+    "fest_web": "lib/web.js",
+    "fest_api": "lib/api.js"
   }
 }
