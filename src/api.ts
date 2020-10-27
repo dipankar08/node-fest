@@ -6,8 +6,8 @@ import _ = require("underscore");
 let browser: Browser = new Browser("Chrome");
 
 export class SWT {
-    browser: Browser|null;
-    driver:WebDriver|null;
+    browser: Browser | null;
+    driver: WebDriver | null;
     constructor() {
         this.browser = new Browser("Chrome");
         this.driver = null;
@@ -19,39 +19,39 @@ export class SWT {
         await this.driver.manage().window().maximize();
     }
     // open an URL
-    async open(url:string){
+    async open(url: string) {
         await this.driver?.doNavigate(url);
     }
-    async wait(timeInMs:number){
+    async wait(timeInMs: number) {
         await sleep(timeInMs);
     }
-    async hasText(text:string){
+    async hasText(text: string) {
         await this.driver?.assertTextVisible("tag_body", text);
     }
-    async hasTextAttrubute(selector:string,text:string){
+    async hasTextAttrubute(selector: string, text: string) {
         await this.driver?.assertTextVisible(selector, text);
     }
-    async hasNoText(text:string){
+    async hasNoText(text: string) {
         await this.driver?.assertNoTextVisible("tag_body", text);
     }
-    async hasAttr(selector:string, key:string, value:string){
+    async hasAttr(selector: string, key: string, value: string) {
         await this.driver?.assertAttr(selector, key, value);
     }
-    async click(selector:string){
+    async click(selector: string) {
         await this.driver?.doSingleClick(selector);
     }
-    async type(selector:string, text:string){
+    async type(selector: string, text: string) {
         await this.driver?.doType(selector, text);
     }
-    async typeAndEnter(selector:string, text:string){
+    async typeAndEnter(selector: string, text: string) {
         //await this.driver?.typeWithEnter(selector, text);
     }
 
-    async reset(){
+    async reset() {
         await this.driver?.doReset()
     }
-    async endTest(){
-       await this.driver?.quit()
+    async endTest() {
+        await this.driver?.quit()
     }
 }
 

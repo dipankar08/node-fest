@@ -1,5 +1,5 @@
 {
-  "name": "simplewebtest",
+  "name": "node-fest",
   "version": "1.0.13",
   "description": "A nice greeter",
   "main": "lib/index.js",
