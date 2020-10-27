@@ -1,5 +1,6 @@
 const util = require('util');
 const chalk = require('chalk');
+const format = require('string-format')
 
 class Result{
     pass_count:number  = 0

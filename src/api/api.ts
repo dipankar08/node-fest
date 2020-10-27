@@ -1,13 +1,10 @@
 #!/usr/bin/env node
 
 import { sleep } from "../common/utils";
-import { result } from "underscore";
-
 const fs = require('fs');
 var request = require('sync-request');
 const chalk = require('chalk');
 const util = require('util');
-const format = require('string-format')
 var program = require('commander');
 var namedRegexp = require("named-js-regexp");
 const { render } = require('micromustache')
@@ -200,6 +197,7 @@ async function run_test_case(testcase:Array<TestCase>){
 }
 
 // Main function
+console.log('Starting API Test...')
 let context:Context = parseCommand();
 var contents = fs.readFileSync(context.file, 'utf8');
 var lines = contents.split("\n");
