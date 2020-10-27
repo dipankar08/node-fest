@@ -1,6 +1,7 @@
 ## Motivation.
 Welcome to Node-Fest : The Fastest E2E Framework for Software blackbox testing.
-node-fest provides simplest unified automation framework for API, WEB, Android, IOS and WS testing.Yyou can write a high-quality e2e automation test in a very simple compact way without any code. 
+
+>>> Node-fest provides simplest unified automation framework for API, WEB, Android, IOS and WS testing.Yyou can write a high-quality e2e automation test in a very simple compact way without any code. 
 
 ## Features:
 * Allow to be extermely productive - You can write 100 of E2E per hours 
