@@ -36,4 +36,5 @@ The whole pupose of this freamwork to be productive by quickly writing testcase 
 - each events can either be an "action" or an "verify" and a collection of arguments, seperated by ":". For example: open:<url> is a an event where "open" is the name of the event and <url> is the url to be open. 
   
 ## Example:
-![Example](https://i.ibb.co/9s5SWWn/Screenshot-2020-07-13-at-02-36-42.png)
+![Example Web test](https://i.ibb.co/9s5SWWn/Screenshot-2020-07-13-at-02-36-42.png)
+![Example API test](https://i.ibb.co/QvvDfPX/Screenshot-2020-10-27-at-03-14-07.png)
