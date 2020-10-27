@@ -1,10 +1,11 @@
 ## Motivation.
-Welcome to the world's simplest WWW automation framework.  With this, you can write a high-quality e2e automation test in a very simple compact way without any code. 
+Welcome to Node-Fest : The Fastest E2E Framework for Software blackbox testing.
+node-fest provides simplest unified automation framework for API, WEB, Android, IOS and WS testing.Yyou can write a high-quality e2e automation test in a very simple compact way without any code. 
 
 ## Features:
-* Write automation without any code.
-* Simple to write the test case
-* The testcase is very compact - Everyline of the textcase file should be one complete test case.
+* Allow to be extermely productive - You can write 100 of E2E per hours 
+* Write exteramlly compact test with with few possible charecter(Everyline of the textcase file should be one complete test case)
+* Allow write test without any code - You just need to follow some syntax.
 * it takes 1/10000000 efforts to write a testcase than the feature dev.
 
 ## Getting started
