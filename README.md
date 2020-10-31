@@ -16,18 +16,19 @@ sudo npm install node-fest -g
 
 ## Testing Web
 Using node-fest, you would be super productive while writing a test case for your product. First, You should create a test case file which holds all the test case. Then, you should keep writing test -cases in that file.
-Each testcase consist of number of instrcution separated by =>. So thus it looks like like instcrtion1 => instruction2 => instrcution3.
+Each testcase consist of number of instruction separated by =>. So thus it looks like like insertion1 => instruction2 => instruction3.
 Each instruction consists of ACTION:TARGET: ARGUMENTS. For example, open:https://google.com will open google. The documentation of instruction sets is given below: 
 
-First Instrcution| Example               |       Explanation
+First Instruction| Example               |       Explanation
 ------------- | -------------------------|-------------------------
+Comments | # Sample comments | Any line starts with # will be comments
 open page | open:http://google.com | open google.com
 Type in a input box |typeWithEnter:name_p:DIPANKAR  | You are trying text for a input like `<input name="p"></input>` and press enter |
 verify text is shown |verifyBodyText: DIAPANKAR| Verify that you have the given text in a body
 
 Full Example: open:http://google.com => typeWithEnter:name_p:DIPANKAR => verifyBodyText: DIAPANKAR.
 
-Now, You are ready to run test case by : $ simplewebtest -f ./testcase.txt
+Now, You are ready to run test case by : $ node-fest -f ./testcase.txt
 
 ## Testing Android
 Under dev -- not yet supported
