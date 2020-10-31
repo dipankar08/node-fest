@@ -15,13 +15,10 @@ sudo npm install node-fest -g
 ## Testing APIs
 
 ## Testing Web
-using node-fest, you would be extremaly productive while writing test case. First, You should create a testcase file which holds all
-the test case <vim testcase.txt>. Then you should keep writing testcases in that file. 
-  
+Using node-fest, you would be super productive while writing a test case for your product. First, You should create a test case file which holds all the test case. Then, you should keep writing test -cases in that file.
 Each testcase consist of number of instrcution separated by =>. So thus it looks like like instcrtion1 => instruction2 => instrcution3.
+Each instruction consists of ACTION:TARGET: ARGUMENTS. For example, open:https://google.com will open google. The documentation of instruction sets is given below: 
 
-Each instruction consisit of ACTION:TARGET:ARGUMNETS for example open:https://google.com will open google. The documentation of instrcution sets are given below:
-| Instrcution | Example | Explanation |
 First Instrcution| Example               |       Explanation
 ------------- | -------------------------|-------------------------
 open page | open:http://google.com | open google.com
