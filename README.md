@@ -15,9 +15,22 @@ sudo npm install node-fest -g
 ## Testing APIs
 
 ## Testing Web
-2. create a testcase file : vim testcase.txt.
-3. write a test case line: open:http://google.com => typeWithEnter:name_p:DIPANKAR => verifyBodyText: DIAPANKAR.
-4. Run test case by : $ simplewebtest -f ./testcase.txt
+using node-fest, you would be extremaly productive while writing test case. First, You should create a testcase file which holds all
+the test case <vim testcase.txt>. Then you should keep writing testcases in that file. 
+  
+Each testcase consist of number of instrcution separated by =>. So thus it looks like like instcrtion1 => instruction2 => instrcution3.
+
+Each instruction consisit of ACTION:TARGET:ARGUMNETS for example open:https://google.com will open google. The documentation of instrcution sets are given below:
+| Instrcution | Example | Explanation |
+First Instrcution| Example               |       Explanation
+------------- | -------------------------|-------------------------
+open page | open:http://google.com | open google.com
+Type in a input box |typeWithEnter:name_p:DIPANKAR  | You are trying text for a input like `<input name="p"></input>` and press enter |
+verify text is shown |verifyBodyText: DIAPANKAR| Verify that you have the given text in a body
+
+Full Example: open:http://google.com => typeWithEnter:name_p:DIPANKAR => verifyBodyText: DIAPANKAR.
+
+Now, You are ready to run test case by : $ simplewebtest -f ./testcase.txt
 
 ## Testing Android
 Under dev -- not yet supported
