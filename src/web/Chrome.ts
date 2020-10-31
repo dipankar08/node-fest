@@ -9,10 +9,15 @@ export class Chrome {
         let service = new ServiceBuilder(driverPath).build();
         setDefaultService(service);
     }
-    public Initialize(): WebDriver {
+    public Initialize(headless =false): WebDriver {
         let chromeOptions = new Options();
         chromeOptions.addArguments('disable-infobars');
         chromeOptions.addArguments("--use-fake-ui-for-media-stream=1");
+        if(headless){
+            chromeOptions.addArguments('--headless');
+            chromeOptions.addArguments('--no-sandbox')
+            chromeOptions.addArguments("--start-maximized")
+        }
         let browser = new Builder()
             .withCapabilities(Capabilities.chrome())
             .setChromeOptions(chromeOptions)

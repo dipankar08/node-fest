@@ -1,0 +1,2 @@
+# Sample comments
+open:http://google.com => typeWithEnter:name_q:DIPANKAR => verifyBodyText: DIPANKAR,m,m,

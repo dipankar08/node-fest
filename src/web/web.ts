@@ -5,31 +5,52 @@ const util = require('util');
 const format = require('string-format')
 var program = require('commander');
 const { render } = require('micromustache')
-
-
 import { WebDriver, By, Key } from "selenium-webdriver";
 import { assert } from "chai";
 import { Browser } from "./Browser";
 import "./Extensions"
 import _ = require("underscore");
+import { sleep } from "../common/utils";
 let browser: Browser = new Browser("Chrome");
 
-// helper
-function sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+type Command ={
+    line: number,
+    name: string,
+    args: Array<any>
+};
 
-// Main function 
-(async function () {
+type TestCase  = {
+    lineNo: number;
+    commandList: Array<Command>
+};
+
+// tokenize file:
+const VALID_COAMMD:Array<string> = [
+    'open', // open url
+    'click', // click an elemnet
+    'wait', // wait for ms
+    'type', // type in a input
+    'typeWithEnter', // type an input and press enter
+    'verifyText', // verify text for an element
+    'verifyBodyText', // verify the text anywhere.
+    'verifyNoBodyText', // this text is not presente
+    'verifyAttr', // verify attributes
+    'alert', // perfrom action on alert
+    'reset', // delete all cookies and reset
+]
+
+
+async function getContext(){
     program
-        .option('-f, --file <path>', 'path of the test file')
-        .option('-l, --line <line_number>', 'It will execute that number only.')
-        .parse(process.argv);
-
-
-    //program.file = "./sample.txt"
-    //program.line = 14;
-
+    .option('-f, --file <path>', 'path of the test file')
+    .option('-l, --line <line_number>', 'It will execute that number only.')
+    .option('-hl', '--headless', 'Run with headless browser')
+    .parse(process.argv);
+       // For test uncomment this line and run <node bin/cmd.js>
+    //program.server = "simplestore.dipankar.co.in"
+    
+    program.file = "/Users/dip/dipankar/node-fest/src/web/sample.txt"
+    //program.line = 13;
     var context:any = {}
     if (program.file) {
         context['file'] = program.file;
@@ -37,33 +58,13 @@ function sleep(ms: number) {
         console.log("You must pass a filepath: (node index.js -s google.com -f ./sample.txt )");
         return;
     }
+    // FOR DEBUG
+    context.headless = true
+    return context;
+}
 
-    interface Command {
-        line: number,
-        name: string,
-        args: Array<any>
-    }
-
-    interface TestCase {
-        lineNo: number;
-        commandList: Array<Command>
-    }
-
-    // tokenlize file:
-    let VALID_COAMMD = [
-        'open', // open url
-        'click', // click an elemnet
-        'wait', // wait for ms
-        'type', // type in a input
-        'typeWithEnter', // type an input and press enter
-        'verifyText', // verify text for an element
-        'verifyBodyText', // verify the text anywhere.
-        'verifyNoBodyText', // this text is not presente
-        'verifyAttr', // verify attributes
-        'alert', // perfrom action on alert
-        'reset', // delete all cookies and reset
-    ]
-    var contents = fs.readFileSync(context.file, 'utf8');
+async function getTestCaseFromFile(file:string, context:any){
+    var contents = fs.readFileSync(file, 'utf8');
     var lines = contents.split("\n");
     var TestCaseList = Array<TestCase>()
 
@@ -80,7 +81,6 @@ function sleep(ms: number) {
         if (line.length == 0) {
             continue;
         }
-
 
         if(line.startsWith("$")){
             line = line.replace("$","")
@@ -136,10 +136,11 @@ function sleep(ms: number) {
         TestCaseList = TestCaseList.filter(x=>x.lineNo >= program.line)
     }
     console.log(chalk.blue(`Building testcase complete for file. TestCase counts: cmd ${TestCaseList.length}`));
+    return TestCaseList;
+}
 
-    // Process Textcase
-    let driver = browser.Initialize()
-    await driver.manage().window().maximize();
+
+async function executeTestCase(TestCaseList:any, driver:any){
     var pass_count = 0;
     var fail_count = 0;
     var cmd_count  =0;
@@ -197,32 +198,38 @@ function sleep(ms: number) {
         }
     }
     console.log("Quit")
-    //await sleep(5000)
-    driver.quit()
+        //await sleep(5000)
+        driver.quit()
+        let result = util.format(`
+    
+    =======================================================
+                            SUMMARY                        
+    =======================================================
+    Total Command exeuted ${cmd_count}
+    Pass Count: ${pass_count}
+    Fail Count: ${fail_count}
+    Total TC: ${pass_count + fail_count}
+    Pass Percentage: ${pass_count * 100 / (pass_count + fail_count)}\%
+    =======================================================`)
+        if (fail_count == 0) {
+            console.log(chalk.green(result));
+        } else {
+            console.log(chalk.red(result));
+        }
+}
 
-    let result = util.format(`
-
-=======================================================
-                        SUMMARY                        
-=======================================================
-Total Command exeuted ${cmd_count}
-Pass Count: ${pass_count}
-Fail Count: ${fail_count}
-Total TC: ${pass_count + fail_count}
-Pass Percentage: ${pass_count * 100 / (pass_count + fail_count)}\%
-=======================================================`)
-    if (fail_count == 0) {
-        console.log(chalk.green(result));
-    } else {
-        console.log(chalk.red(result));
+// Main function 
+(async function () {
+    var driver:WebDriver | null = null;
+    try{
+        const context = await getContext();
+        const testcase_list = await getTestCaseFromFile(context.file, context);
+        // Process Textcase
+        driver = browser.Initialize(context.headless)
+        await driver.manage().window().maximize();
+        await executeTestCase(testcase_list, driver);
+    } catch(err){
+        console.log(err);
+        driver?.quit()
     }
-    /*
-    var lineIdx = 0;
-    if(program.line){
-        // Execute from that line.s
-        console.log("Executing from Line: :"+program.line)
-        lineIdx = parseInt(program.line) -1;
-    } 
-    */
-
 })();

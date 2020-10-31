@@ -10,15 +10,15 @@ export class Browser {
 		this._chromeInstance = new Chrome();
 	}
 
-	public Initialize(): webDriver.WebDriver {
+	public Initialize(headless=false): webDriver.WebDriver {
 		var driver: webDriver.WebDriver;
 
 		switch (this._browserType) {
 			case EBrowserType.Chrome:
-				driver = this._chromeInstance.Initialize();
+				driver = this._chromeInstance.Initialize(headless);
 				break;
 			default:
-				driver = this._chromeInstance.Initialize();
+				driver = this._chromeInstance.Initialize(headless);
 				break;
 		}
 		return driver;
