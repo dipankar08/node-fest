@@ -1,1 +1,2 @@
+tsc
 npm publish

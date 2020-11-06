@@ -134,7 +134,7 @@ async function getTestCaseFromFile(file: string, context: any) {
             if (cmd.length == 0) {
                 continue
             }
-            let tokens = cmd.split(":").map(x => x.trim())
+            let tokens = cmd.split(",").map(x => x.trim())
             if (tokens.length == 0) {
                 console.log(chalk.red(`[${i + 1}]Invalid Token in ${cmd}`));
                 throw "Error";

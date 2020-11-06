@@ -1,6 +1,6 @@
 {
   "name": "node-fest",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "A nice greeter",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
