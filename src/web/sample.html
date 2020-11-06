@@ -1,0 +1,77 @@
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // action
+            var count = 0;
+            $("#act1 button").click(function () {
+                count++;
+                $("#act1 p").html(`Button clicked ${count}`);
+            })
+
+            // input
+            $("#inp1 button").click(function () {
+                $("#inp1 p").html('input is '+$("#inp1 input").val());
+            })
+            $("#inp1 input").keypress(function (e) {
+                if (e.keyCode == 13) {
+                    $("#inp1 p").html('input is '+ $("#inp1 input").val());
+                }
+            });
+            $("#alert button").click(function(){
+                let isBoss = confirm("Are you the boss?");
+                if(isBoss){
+                    $("#alert p").html('alert return ok')
+                } else {
+                    $("#alert p").html('alert return cancel')
+                }
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+    <!-- Verify TEST -->
+    <div>
+        <p>verifyBodyText </p>
+        <p>verifyNoBodyText1</p>
+        <p class="a">ClassA</p>
+        <p class="b">ClassB</p>
+        <p id="c"> IdC</p>
+        <div id="d">
+            <div class="c">
+                <p>Id_D_CLASS_C_TAG_P</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div>
+        <div id="act1">
+            <button>Click Me</button>
+            <p></p>
+        </div>
+    </div>
+
+    <!-- INPUTS-->
+    <div id="inp1">
+        <input placeholder="write something">
+        <button> show</button>
+        <p></p>
+    </div>
+
+    <!-- Attribute-->
+    <div id="atr1">
+        <a href="https://google.com/">Link</a>
+    </div>
+    <!-- Alert -->
+    <div id="alert">
+        <button> open Alert</button>
+        <p></p>
+    </div>
+</body>
+
+</html>

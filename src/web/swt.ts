@@ -20,19 +20,19 @@ export class SWT {
     }
     // open an URL
     async open(url: string) {
-        await this.driver?.doNavigate(url);
+        await this.driver?.open(url);
     }
     async wait(timeInMs: number) {
         await sleep(timeInMs);
     }
     async hasText(text: string) {
-        await this.driver?.assertTextVisible("tag_body", text);
+        await this.driver?.verifyBodyText("body", text);
     }
     async hasTextAttrubute(selector: string, text: string) {
-        await this.driver?.assertTextVisible(selector, text);
+        await this.driver?.verifyBodyText(selector, text);
     }
     async hasNoText(text: string) {
-        await this.driver?.assertNoTextVisible("tag_body", text);
+        await this.driver?.verifyNoBodyText("body", text);
     }
     async hasAttr(selector: string, key: string, value: string) {
         await this.driver?.assertAttr(selector, key, value);
