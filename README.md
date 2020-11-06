@@ -18,16 +18,58 @@ sudo npm install node-fest -g
 Using node-fest, you would be super productive while writing a test case for your product. First, You should create a test case file which holds all the test case. Then, you should keep writing test -cases in that file.
 Each testcase consist of number of instruction separated by =>. So thus it looks like like insertion1 => instruction2 => instruction3.
 Each instruction consists of ACTION:TARGET: ARGUMENTS. For example, open:https://google.com will open google. The documentation of instruction sets is given below: 
+```
+## Sample comments
+##
+## Note: We use two # to indicate comments as a single hash can be inside selector
+##/////////////////
+open:http://127.0.0.1:5500/src/web/sample.html   ## Please make sure you run the live server from the VS code.
+## Validate Text.
+=> verifyBodyText: verifyBodyText  ## This text is present
+=> verifyNoBodyText: verifyNoXXXBodyText ## This text is not present
+=> verifyText:.a: classA  ## This text is present
+=> verifyText:.b: classB  ## This text is present
+=> verifyText:#c: IdC   ## This text is present
+=> verifyText:#d .c p: Id_D_CLASS_C_TAG_P  ## This text is present
+=> wait:500 ## wait for 500 ms
 
-First Instruction| Example               |       Explanation
-------------- | -------------------------|-------------------------
-Comments | # Sample comments | Any line starts with # will be comments
-open page | open:http://google.com | open google.com
-Type in a input box |typeWithEnter:name_p:DIPANKAR  | You are trying text for a input like `<input name="p"></input>` and press enter |
-verify text is shown |verifyBodyText: DIAPANKAR| Verify that you have the given text in a body
+## Action
+=> click:#act1 button
+=> verifyBodyText: Button clicked 1 
+=> click:#act1 button
+=> verifyBodyText: Button clicked 2
+=> clickWaitVerify : #act1 button : 10 : Button clicked 3
+=> clickWaitVerify : #act1 button : 10 : Button clicked 4
 
-Full Example: open:http://google.com => typeWithEnter:name_p:DIPANKAR => verifyBodyText: DIAPANKAR.
+## Inputs
+=> input : #inp1 input : hello
+=> clickWaitVerify : #inp1 button : 10 : input is hello
+=> input : #inp1 input : hello2
+=> clickWaitVerify : #inp1 button : 10 : input is hello2
+=> inputWithEnter : #inp1 input : hello3
+=> verifyBodyText : input is hello3
 
+## Attribute
+=> verifyAttr:#atr1 a:href:https://google.com/
+=> setAttr:#atr1 a:href:https://yahoo.com/
+=> verifyAttr:#atr1 a:href:https://yahoo.com/
+## alert
+=> click:#alert button
+=> alert:ok
+=>verifyBodyText:alert return ok
+=> click:#alert button
+=> alert:cancel
+=>verifyBodyText:alert return cancel
+## Cookie
+=> cookie:verify:debug:1         ## By default you have a cookie for debug as 1
+=> cookie:set:name:dipankar      ## Setting a cookie
+=> cookie:verify:name:dipankar   ## getting a cookie
+=> cookie:delete:name            ## Delete a cookie
+=> cookie:verify:name:undefined  ## After delete, please verify
+## Browner function
+## Web Request
+
+```
 Now, You are ready to run test case by : $ node-fest -f ./testcase.txt
 
 ## Testing Android
