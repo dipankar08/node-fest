@@ -11,6 +11,7 @@ import "./Extensions"
 import _ = require("underscore");
 import { assert, callNetwork, regexMatch, sleep, sleepMS, splitX } from "../common/utils";
 import { Result } from "../common/result";
+import { args } from "commander";
 let browser: Browser = new Browser("Chrome");
 
 type Command = {
@@ -51,6 +52,8 @@ const VALID_COAMMD: Array<string> = [
 
 
     'reset', // delete all cookies and reset,
+    'switch',
+    'verifyTitle',
 
     // network
     'network_get',
@@ -83,8 +86,8 @@ async function getContext() {
         return;
     }
     // FOR DEBUG
-    //context.headless = true
-    //context.quit = false;
+    context.headless = false
+   // context.quit = false;
     return context;
 }
 
@@ -174,36 +177,45 @@ async function executeTestCase(TestCaseList: any, driver: any, context: any) {
         try {
             console.log(chalk.blue(`[${tc.lineNo}] Executing test case ...`));
             for (var cmd1 of tc.commandList) {
+                var args = cmd1.args;
                 console.log(chalk.grey(`[${cmd1.line}] Processing command: ${cmd1.full_line}`));
                 switch (cmd1.name) {
                     case 'wait':
                         await sleepMS(parseInt(cmd1.args[0]));
                         break;
                     case 'open':
-                        await driver.open(cmd1.args.join(":"));
+                        if(args.length == 1){
+                            args.push("main")
+                        }
+                        await driver.open(cmd1.args[0],cmd1.args[1]);
                         break;
                     case 'verifyBodyText':
-                        await driver.verifyBodyText("body", cmd1.args.join(":"))
+                        await driver.verifyBodyText("body", cmd1.args[0])
                         console.log(chalk.green(`[${cmd1.line}] Passed!`));
                         break;
                     case 'verifyNoBodyText':
-                        await driver.verifyNoBodyText("body", cmd1.args.join(":"))
+                        await driver.verifyNoBodyText("body", cmd1.args[0])
                         console.log(chalk.green(`[${cmd1.line}] Passed!`));
                         break;
                     case 'verifyAttr':
-                        await driver.assertAttr(cmd1.args[0], cmd1.args[1], cmd1.args.slice(2).join(":"))
+                        await driver.assertAttr(cmd1.args[0], cmd1.args[1], cmd1.args.slice(2)[0])
                         console.log(chalk.green(`[${cmd1.line}] Passed!`));
                         break;
                     case 'setAttr':
-                        await driver.setAttr(cmd1.args[0], cmd1.args[1], cmd1.args.slice(2).join(":"))
+                        await driver.setAttr(cmd1.args[0], cmd1.args[1], cmd1.args.slice(2)[0])
                         console.log(chalk.green(`[${cmd1.line}] Passed!`));
                         break;
                     case 'verifyText':
-                        await driver.verifyBodyText(cmd1.args[0], cmd1.args.slice(1).join(":"))
+                        await driver.verifyBodyText(cmd1.args[0], cmd1.args.slice(1)[0])
+                        console.log(chalk.green(`[${cmd1.line}] Passed!`));
+                        break;
+                    case 'verifyTitle':
+                        let title = await driver.getTitle();
+                        assert(title == args[0], `[${cmd1.line}] Failed! Expected:<${args[0]}> Observed: <${title}>`)
                         console.log(chalk.green(`[${cmd1.line}] Passed!`));
                         break;
                     case 'click':
-                        await driver.doSingleClick(cmd1.args.join(":"))
+                        await driver.doSingleClick(cmd1.args[0])
                         break;
                     case 'clickWaitVerify':
                         await driver.doSingleClick(cmd1.args[0])
@@ -212,10 +224,10 @@ async function executeTestCase(TestCaseList: any, driver: any, context: any) {
                         console.log(chalk.green(`[${cmd1.line}] Passed!`));
                         break;
                     case 'input':
-                        await driver.doType(cmd1.args[0], cmd1.args.slice(1).join(":"))
+                        await driver.doType(cmd1.args[0], cmd1.args.slice(1)[0])
                         break;
                     case 'inputWithEnter':
-                        await driver.doTypeEnter(cmd1.args[0], cmd1.args.slice(1).join(":"))
+                        await driver.doTypeEnter(cmd1.args[0], cmd1.args.slice(1)[0])
                         break;
                     case 'alert':
                         await driver.doAlert(cmd1.args[0])
@@ -229,6 +241,9 @@ async function executeTestCase(TestCaseList: any, driver: any, context: any) {
                         break;
                     case 'reset':
                         await driver.doReset()
+                        break;
+                    case 'switch':
+                        await driver.switchX(args[0])
                         break;
                     case 'network_get':
                         let networkResp  = await callNetwork('GET', cmd1.args[0], {})
@@ -273,6 +288,9 @@ async function executeTestCase(TestCaseList: any, driver: any, context: any) {
     } catch (err) {
         console.log(err);
         if (context.quit) {
+            if(context.headless == false){
+                await sleep(3); // 3 sec to check
+            }
             driver?.quit()
         }
     }

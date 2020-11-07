@@ -7,6 +7,7 @@ open, http://127.0.0.1:5500/src/web/sample.html   ## Please make sure you run th
 
 ## TEST
 
+
 ## Validate Text.
 => verifyBodyText,  verifyBodyText  ## This text is present
 => verifyNoBodyText,  verifyNoXXXBodyText ## This text is not present
@@ -34,9 +35,9 @@ open, http://127.0.0.1:5500/src/web/sample.html   ## Please make sure you run th
 
 
 ## Attribute
-=> verifyAttr, #atr1 a, href, https, //google.com/
-=> setAttr, #atr1 a, href, https, //yahoo.com/
-=> verifyAttr, #atr1 a, href, https, //yahoo.com/
+=> verifyAttr, #atr1 a, href, https://google.com/
+=> setAttr, #atr1 a, href, https://yahoo.com/
+=> verifyAttr, #atr1 a, href, https://yahoo.com/
 
 ## alert
 => click, #alert button
@@ -53,9 +54,18 @@ open, http://127.0.0.1:5500/src/web/sample.html   ## Please make sure you run th
 => cookie, delete, name            ## Delete a cookie
 => cookie, verify, name, undefined  ## After delete,  please verify
 
-## Browner function
+## Switching Context Functionality ( Supporting multiple windows nav)
+=> open, http://google.com, Window1 ## Open Google in Windows 1
+=> open, http://yahoo.com, Window2, ## Open Yahoo in Window 2
+=> switch, Window1  ## Go back to windows of google and check.
+=> verifyTitle, Google,
+=> switch, Window2
+=> verifyTitle, Yahoo is now a part of Verizon Media,
+=> switch, main
+=> verifyTitle, TEST,
+
 
 ## Web Request
 => network_get, http://simplestore.dipankar.co.in/api/test/insert?name=dip, success
-## THIS WILL NOT WORK AS , will split it=> network_post, http://simplestore.dipankar.co.in/api/test/insert, {"name":"dip", "roll":10},success
-=> network_post, http://simplestore.dipankar.co.in/api/test/insert, {"name":"dip", "roll":10},success
+## THIS WILL NOT WORK AS , will split it=> network_post, http://simplestore.dipankar.co.in/api/test/insert, {"name":"dip", "roll":10},success#
+## => network_post, http://simplestore.dipankar.co.in/api/test/insert, {"name":"dip"},success

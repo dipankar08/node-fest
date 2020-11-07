@@ -5,7 +5,7 @@ import { assert, sleep, sleepMS } from "../common/utils";
 declare module "selenium-webdriver" {
 	export interface WebDriver {
 		doType(selector: String, text: string): Promise<void>;
-		open(selector: String): Promise<void>;
+		open(selector: String,window_name:string): Promise<void>;
 		doTypeEnter(selector: String, text: string): Promise<void>;
 		doSingleClick(selector: String): Promise<void>;
 
@@ -17,6 +17,7 @@ declare module "selenium-webdriver" {
 		cookie(action: string, key: string, value?: string): Promise<void>;
 		doAlert(selector: String): Promise<void>;
 		doReset(): Promise<void>;
+		switchX(win:string):Promise<void>;
 	}
 }
 
@@ -43,12 +44,35 @@ WebDriver.prototype.cookie = async function (action: string, key: string, value?
 	}
 };
 
-WebDriver.prototype.open = async function (selector: string) {
+let winHandleMap:any = {}
+
+WebDriver.prototype.switchX = async function (window_name:string) {
+	let handle = winHandleMap[window_name];
 	const driver = this as WebDriver;
-	await driver.navigate().to(selector);
+	await driver.switchTo().window(handle);
+	await sleep(2)
+}
+
+WebDriver.prototype.open = async function (url: string, window_name:string) {
+	const driver = this as WebDriver;
+	await driver.executeScript(`window.open('${url}','_blank')`)
+
+	// update map
+	let allHandles =  await driver.getAllWindowHandles()
+	let this_handle = allHandles[allHandles.length -1]
+	winHandleMap[window_name] = this_handle;
+	console.log(winHandleMap);
+	await this.switchX(window_name);
+
+	//await driver.navigate().to(url);
 	// we must have a cookie of 
-	await sleepMS(500)
+	//await sleepMS(500)
+
 	await driver.manage().addCookie({name:'debug',value:'1', domain: new URL( await driver.getCurrentUrl()).hostname})
+
+
+
+
 };
 WebDriver.prototype.doType = async function (selector: string, text: string) {
 	const driver = this as WebDriver;
@@ -127,6 +151,7 @@ function executeScript(driver: WebDriver, script: string) {
 
 WebDriver.prototype.verifyBodyText = async function (selector: string, text: string) {
 	const driver = this as WebDriver;
+	let title = await driver.getTitle()
 	await sleep(1)
 	let data = await resolveElementAll(driver, selector)
 	var data1 = ''

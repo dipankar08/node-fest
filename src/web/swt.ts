@@ -20,7 +20,7 @@ export class SWT {
     }
     // open an URL
     async open(url: string) {
-        await this.driver?.open(url);
+        await this.driver?.open(url,"main");
     }
     async wait(timeInMs: number) {
         await sleep(timeInMs);
