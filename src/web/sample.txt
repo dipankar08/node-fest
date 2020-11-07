@@ -56,3 +56,6 @@ open, http://127.0.0.1:5500/src/web/sample.html   ## Please make sure you run th
 ## Browner function
 
 ## Web Request
+=> network_get, http://simplestore.dipankar.co.in/api/test/insert?name=dip, success
+## THIS WILL NOT WORK AS , will split it=> network_post, http://simplestore.dipankar.co.in/api/test/insert, {"name":"dip", "roll":10},success
+=> network_post, http://simplestore.dipankar.co.in/api/test/insert, {"name":"dip", "roll":10},success

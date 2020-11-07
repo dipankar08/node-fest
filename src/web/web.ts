@@ -6,11 +6,10 @@ const format = require('string-format')
 var program = require('commander');
 const { render } = require('micromustache')
 import { WebDriver, By, Key } from "selenium-webdriver";
-import { assert } from "chai";
 import { Browser } from "./Browser";
 import "./Extensions"
 import _ = require("underscore");
-import { sleep, sleepMS } from "../common/utils";
+import { assert, callNetwork, regexMatch, sleep, sleepMS, splitX } from "../common/utils";
 import { Result } from "../common/result";
 let browser: Browser = new Browser("Chrome");
 
@@ -51,7 +50,11 @@ const VALID_COAMMD: Array<string> = [
     'cookie',
 
 
-    'reset', // delete all cookies and reset
+    'reset', // delete all cookies and reset,
+
+    // network
+    'network_get',
+    'network_post'
 ]
 
 
@@ -67,7 +70,7 @@ async function getContext() {
     // default
 
 
-    //program.file = "/Users/dip/dipankar/node-fest/src/web/sample.txt"
+    program.file = "/Users/dip/dipankar/node-fest/src/web/sample.txt"
     // init with default
     var context: any = {
         quit: true,
@@ -224,10 +227,22 @@ async function executeTestCase(TestCaseList: any, driver: any, context: any) {
                             console.log(chalk.green(`[${cmd1.line}] Passed!`));
                         }
                         break;
-                    
                     case 'reset':
                         await driver.doReset()
                         break;
+                    case 'network_get':
+                        let networkResp  = await callNetwork('GET', cmd1.args[0], {})
+                        assert(regexMatch(cmd1.args[1], networkResp) != false, `[${cmd1.line}] Failed Expected: <${cmd1.args[1]}> Observed:<${networkResp}>`)
+                        console.log(chalk.green(`[${cmd1.line}] Passed!`));
+                        break;
+                    case 'network_post':
+                        console.log(cmd1);
+                        networkResp  = await callNetwork('GET', cmd1.args[0], cmd1.arg[1])
+                        assert(regexMatch(cmd1.args[2], networkResp) != false, `[${cmd1.line}] Failed Expected: <${cmd1.args[2]}> Observed:<${networkResp}>`)
+                        console.log(chalk.green(`[${cmd1.line}] Passed!`));
+                        break;
+                    default:
+                        assert(false, `[${cmd1.line}] Invalid command: <${cmd1.name}>`)
                 }
                 result.markPass()
             }

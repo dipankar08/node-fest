@@ -1,5 +1,6 @@
+
 import { WebDriver, By, Key, WebElement, } from "selenium-webdriver";
-import { sleepMS } from "../common/utils";
+import { assert, sleep, sleepMS } from "../common/utils";
 
 declare module "selenium-webdriver" {
 	export interface WebDriver {
@@ -71,13 +72,13 @@ WebDriver.prototype.doReset = async function () {
 
 WebDriver.prototype.doSingleClick = async function (selector: string) {
 	const driver = this as WebDriver;
-	await sleep(1 * 1000)
+	await sleep(1)
 	await (await resolveElement(driver, selector)).click();
 };
 
 WebDriver.prototype.doAlert = async function (action: String) {
 	const driver = this as WebDriver;
-	sleep(500)
+	sleep(5)
 	// working with alerts.
 	try {
 		let alert = await driver.switchTo().alert();
@@ -126,7 +127,7 @@ function executeScript(driver: WebDriver, script: string) {
 
 WebDriver.prototype.verifyBodyText = async function (selector: string, text: string) {
 	const driver = this as WebDriver;
-	await sleep(1 * 1000)
+	await sleep(1)
 	let data = await resolveElementAll(driver, selector)
 	var data1 = ''
 	//console.log(data)
@@ -151,7 +152,7 @@ WebDriver.prototype.verifyBodyText = async function (selector: string, text: str
 
 WebDriver.prototype.verifyNoBodyText = async function (selector: string, text: string) {
 	const driver = this as WebDriver;
-	await sleep(1 * 1000)
+	await sleep(1)
 	let data = await resolveElementAll(driver, selector);
 	var data1 = ''
 	//console.log(data)
@@ -195,16 +196,4 @@ async function resolveElement(driver: WebDriver, sel: string): Promise<WebElemen
 	} catch (error) {
 		throw `[resolveElement] Not able to find selector in the webpage for <${sel}> `
 	}
-}
-
-function assert(cond: boolean, error: string) {
-	if (cond) {
-		//
-	} else {
-		throw (error)
-	}
-}
-
-function sleep(ms: number) {
-	return new Promise(resolve => setTimeout(resolve, ms));
 }
