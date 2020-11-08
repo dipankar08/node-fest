@@ -15,9 +15,21 @@ sudo npm install node-fest -g
 ## Testing APIs
 
 ## Testing Web
-Using node-fest, you would be super productive while writing a test case for your product. First, You should create a test case file which holds all the test case. Then, you should keep writing test -cases in that file.
-Each testcase consist of number of instruction separated by =>. So thus it looks like like insertion1 => instruction2 => instruction3.
-Each instruction consists of ACTION:TARGET: ARGUMENTS. For example, open:https://google.com will open google. The documentation of instruction sets is given below: 
+Using node-fest, you would be super productive while writing a test case for your product.
+
+First, You should create a test case file which holds all the test case. Then, you should keep writing testcases in that file. Each file consist of number of instruction separated by =>. So thus it looks like like insertion1 => instruction2 => instruction3.
+
+Each instruction consists of ACTION and ARGUMENTS seperated by the comma. For example, open, https://google.com will open google. You can go throw the below example to see how you should be writing the test case.
+
+We support following feature:
+1. Perfrom Action like button click and Click and Enter
+2. Inputing text: You can add inputs in into the form 
+3. Managing alerts: You can press ok or cancel in the alarts.
+4. Mangaing DOM attributes: You can set or verify the attibute of a DOM elements.
+5. Cookies: You should be able to do set, verify or delete cookies.
+6. Managing windows: You should be open new windows and switch between two windows. 
+7. WebRequest: You can make XHR GET or POST request in a single line. 
+
 ```
 ## Sample comments
 ##
