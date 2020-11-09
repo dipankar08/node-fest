@@ -1,20 +1,21 @@
+/*
 import { WebDriver, By, Key } from "selenium-webdriver";
 import { assert } from "chai";
-import { Browser } from "./Browser";
+import { Browser, EBrowserType } from "./Browser";
 import "./Extensions"
 import _ = require("underscore");
-let browser: Browser = new Browser("Chrome");
+let browser: Browser = new Browser(EBrowserType.Chrome);
 
 export class SWT {
     browser: Browser | null;
     driver: WebDriver | null;
     constructor() {
-        this.browser = new Browser("Chrome");
+        this.browser = new Browser(EBrowserType.Chrome);
         this.driver = null;
     }
 
     async initChome() {
-        this.browser = new Browser("Chrome");
+        this.browser = new Browser(EBrowserType.Chrome);
         this.driver = this.browser.Initialize()
         await this.driver.manage().window().maximize();
     }
@@ -59,3 +60,5 @@ export class SWT {
 function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+*/

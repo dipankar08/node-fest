@@ -21,6 +21,7 @@ open, http://127.0.0.1:5500/src/web/sample.html   ## Please make sure you run th
 => click, #act1 button
 => verifyBodyText,  Button clicked 1 
 => click, #act1 button
+=> click, #act1 a
 => verifyBodyText,  Button clicked 2
 => clickWaitVerify,  #act1 button,  10,  Button clicked 3
 => clickWaitVerify,  #act1 button,  10,  Button clicked 4

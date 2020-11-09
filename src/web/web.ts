@@ -1,22 +1,19 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const chalk = require('chalk');
-const util = require('util');
-const format = require('string-format')
 var program = require('commander');
 const { render } = require('micromustache')
 import { WebDriver, By, Key } from "selenium-webdriver";
-import { Browser } from "./Browser";
 import "./Extensions"
 import _ = require("underscore");
 import { assert, callNetwork, regexMatch, sleep, sleepMS, splitX } from "../common/utils";
 import { Result } from "../common/result";
-import { args } from "commander";
-let browser: Browser = new Browser("Chrome");
+import { EBrowserType, getWebDriver } from "./Browser";
+
 
 type Command = {
     line: number,
-    full_line:string,
+    full_line: string,
     name: string,
     args: Array<any>
 };
@@ -35,11 +32,11 @@ const VALID_COAMMD: Array<string> = [
     'verifyBodyText', // verify the text anywhere.
     'verifyNoBodyText', // this text is not presente
     'verifyText', // verify text for an element
-   
+
 
     'click', // click an elemnet
     'clickWaitVerify', // Click wait and verify
-  
+
     'input', // type in a input
     'inputWithEnter', // type an input and press enter
 
@@ -60,34 +57,39 @@ const VALID_COAMMD: Array<string> = [
     'network_post'
 ]
 
+export type Context = {
+    file: string,
+    line: number,
+    quit: boolean,
+    headless: boolean,
+    browser: EBrowserType,
+}
 
-async function getContext() {
+
+function getContext(): Context {
     program
         .option('-f, --file <path>', 'path of the test file')
         .option('-l, --line <line_number>', 'It will execute that number only.')
-        .option('-hl', '--headless', 'Run with headless browser')
-        .option('-q', '--quit', 'pass this argument if you want to quit the browner at end')
+        .option('-hl, --headless <headless>', 'Run with headless browser')
+        .option('-q, --quit <quit>', 'pass this argument if you want to quit the browner at end')
+        .option('-b, --browser <browser>', 'Pass chrome or firefox')
         .parse(process.argv);
-    // For test uncomment this line and run <node bin/cmd.js>
-    //program.server = "simplestore.dipankar.co.in"
-    // default
 
-
+    // DEBUG ONLY
     program.file = "/Users/dip/dipankar/node-fest/src/web/sample.txt"
+    //program.browser ="firefox"
+
     // init with default
-    var context: any = {
-        quit: true,
-        headless:true,
-    }
-    if (program.file) {
-        context['file'] = program.file;
-    } else {
-        console.log("You must pass a filepath: (node index.js -s google.com -f ./sample.txt )");
-        return;
+    var context: Context = {
+        line: program.line ? parseInt(program.line) : 0,
+        headless: program.headless ? (program.headless == 'true') : true,
+        quit: program.quit ? (program.quit == 'true') : true,
+        file: program.file ? program.file : assert(false, "You must pass a filepath like <-f hello.txt>"),
+        browser: (program.browser == 'firefox') ? EBrowserType.Firefox : EBrowserType.Chrome,
     }
     // FOR DEBUG
     context.headless = false
-   // context.quit = false;
+    // context.quit = false;
     return context;
 }
 
@@ -153,7 +155,7 @@ async function getTestCaseFromFile(file: string, context: any) {
                 line: i + 1,
                 name: tokens[0],
                 args: tokens.slice(1),
-                full_line:cmd,
+                full_line: cmd,
             }
             testCase.commandList.push(sCommand)
         }
@@ -184,10 +186,10 @@ async function executeTestCase(TestCaseList: any, driver: any, context: any) {
                         await sleepMS(parseInt(cmd1.args[0]));
                         break;
                     case 'open':
-                        if(args.length == 1){
+                        if (args.length == 1) {
                             args.push("main")
                         }
-                        await driver.open(cmd1.args[0],cmd1.args[1]);
+                        await driver.open(cmd1.args[0], cmd1.args[1]);
                         break;
                     case 'verifyBodyText':
                         await driver.verifyBodyText("body", cmd1.args[0])
@@ -235,7 +237,7 @@ async function executeTestCase(TestCaseList: any, driver: any, context: any) {
 
                     case 'cookie':
                         await driver.cookie(cmd1.args[0], cmd1.args[1], cmd1.args[2])
-                        if(cmd1.args[0] == 'verify'){
+                        if (cmd1.args[0] == 'verify') {
                             console.log(chalk.green(`[${cmd1.line}] Passed!`));
                         }
                         break;
@@ -246,13 +248,13 @@ async function executeTestCase(TestCaseList: any, driver: any, context: any) {
                         await driver.switchX(args[0])
                         break;
                     case 'network_get':
-                        let networkResp  = await callNetwork('GET', cmd1.args[0], {})
+                        let networkResp = await callNetwork('GET', cmd1.args[0], {})
                         assert(regexMatch(cmd1.args[1], networkResp) != false, `[${cmd1.line}] Failed Expected: <${cmd1.args[1]}> Observed:<${networkResp}>`)
                         console.log(chalk.green(`[${cmd1.line}] Passed!`));
                         break;
                     case 'network_post':
                         console.log(cmd1);
-                        networkResp  = await callNetwork('GET', cmd1.args[0], cmd1.arg[1])
+                        networkResp = await callNetwork('GET', cmd1.args[0], cmd1.arg[1])
                         assert(regexMatch(cmd1.args[2], networkResp) != false, `[${cmd1.line}] Failed Expected: <${cmd1.args[2]}> Observed:<${networkResp}>`)
                         console.log(chalk.green(`[${cmd1.line}] Passed!`));
                         break;
@@ -278,17 +280,19 @@ async function executeTestCase(TestCaseList: any, driver: any, context: any) {
 // Main function 
 (async function () {
     var driver: WebDriver | null = null;
-    const context = await getContext();
+    const context: Context = getContext();
     try {
         const testcase_list = await getTestCaseFromFile(context.file, context);
         // Process Textcase
-        driver = browser.Initialize(context.headless)
+        //let browser: Browser = new Browser(context.browser);
+        //driver = browser.Initialize(context.headless)
+        driver = await getWebDriver(context);
         await driver.manage().window().maximize();
         await executeTestCase(testcase_list, driver, context);
     } catch (err) {
         console.log(err);
         if (context.quit) {
-            if(context.headless == false){
+            if (context.headless == false) {
                 await sleep(3); // 3 sec to check
             }
             driver?.quit()

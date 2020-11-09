@@ -14,16 +14,16 @@
 
             // input
             $("#inp1 button").click(function () {
-                $("#inp1 p").html('input is '+$("#inp1 input").val());
+                $("#inp1 p").html('input is ' + $("#inp1 input").val());
             })
             $("#inp1 input").keypress(function (e) {
                 if (e.keyCode == 13) {
-                    $("#inp1 p").html('input is '+ $("#inp1 input").val());
+                    $("#inp1 p").html('input is ' + $("#inp1 input").val());
                 }
             });
-            $("#alert button").click(function(){
+            $("#alert button").click(function () {
                 let isBoss = confirm("Are you the boss?");
-                if(isBoss){
+                if (isBoss) {
                     $("#alert p").html('alert return ok')
                 } else {
                     $("#alert p").html('alert return cancel')
@@ -53,6 +53,7 @@
     <div>
         <div id="act1">
             <button>Click Me</button>
+            <a href="#">Href</a>
             <p></p>
         </div>
     </div>

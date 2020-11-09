@@ -1,3 +1,4 @@
+/*
 import { SWT } from "./swt";
 async function test() {
     let swt = new SWT()
@@ -9,4 +10,5 @@ async function test() {
     await swt.hasText("Facebook helps you connect and share with the people in your life.")
 }
 test();
+*/
 
