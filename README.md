@@ -115,7 +115,37 @@ Under dev -- not yet supported
 Under dev -- not yet supported
 
 ## Testing Websockets
-Under dev -- not yet supported
+If you running WS sever, you can test the message communication with multiple clients, here are the supported comand.
+
+```
+## Consider creating three websocket connection to a server
+=> context => server => wss://echo.websocket.org
+=> connect => {{server}} => id1
+=> connect => {{server}} => id2
+=> connect => {{server}} => id3
+
+## Send the message on first websocket
+## And verify other two connection got the resp
+=> send => {{id1}} => payload-A1
+=> send => {{id1}} => payload-A2
+=> send => {{id2}} => payload-B1
+=> send => {{id3}} => payload-C1
+
+=> check_recv => {{id1}} => payload-A1
+=> check_recv => {{id1}} => payload-A2
+=> check_recv => {{id2}} => payload-B1
+=> check_recv => {{id3}} => payload-C1
+
+## disconnect all websocket
+=> disconnect => {{id1}}
+=> disconnect => {{id2}}
+=> disconnect => {{id3}}
+
+## If you try to send one it will give error
+# => send => {{id1}} => payload1
+# => check_recv => {{id1}} => error
+
+```
 
 ## How to write the testcase?
 The whole pupose of this freamwork to be productive by quickly writing testcase in very compact way. 
