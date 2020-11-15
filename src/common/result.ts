@@ -1,3 +1,5 @@
+import { TestCase } from "../types";
+
 const util = require('util');
 const chalk = require('chalk');
 const format = require('string-format')
@@ -9,13 +11,18 @@ export class Result{
     constructor(){
 
     }
-    markPass(){
+    markPass(tc?:TestCase){
         this.pass_count++
+        if(tc){
+            console.log(chalk.red(`[${tc.line}][PASS] TEST PASS :)`));
+        }
     }
-    markFail(){
+    markFail(tc?:TestCase, msg?:string){
         this.fail_count++
+        if(tc && msg){
+            console.log(chalk.red(`[${tc.line}][FAIL] Test case failed: ${JSON.stringify(tc)}, msg: ${msg}`));
+        }
     }
-
     printResult(){
         let result = util.format("\n\n\
         =======================================================\n\

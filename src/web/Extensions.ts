@@ -64,6 +64,8 @@ WebDriver.prototype.open = async function (url: string, window_name: string) {
 	} else {
 		await driver.executeScript(`window.open('${url}','_blank')`)
 	}
+	// Wait 500ms to open the page
+	await sleepMS(500);
 
 	// update map
 	let allHandles = await driver.getAllWindowHandles()

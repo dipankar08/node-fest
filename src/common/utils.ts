@@ -25,7 +25,7 @@ export function callNetwork(type: 'GET' | 'POST', url: string, data: any): strin
 
 export function assert(cond: boolean, error: string) {
     if (!cond) {
-        throw (error)
+        throw Error(error)
     }
 }
 

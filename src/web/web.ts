@@ -76,8 +76,8 @@ function getContext(): Context {
         .parse(process.argv);
 
     // DEBUG ONLY
-    program.file = "/Users/dip/dipankar/node-fest/src/web/sample.txt"
-    //program.browser ="firefox"
+    // program.file = "/Users/dip/dipankar/node-fest/src/web/sample.txt"
+    // program.browser ="firefox"
 
     // init with default
     var context: Context = {
@@ -88,7 +88,7 @@ function getContext(): Context {
         browser: (program.browser == 'firefox') ? EBrowserType.Firefox : EBrowserType.Chrome,
     }
     // FOR DEBUG
-    context.headless = false
+    // context.headless = false
     // context.quit = false;
     return context;
 }

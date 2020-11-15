@@ -4,11 +4,9 @@ export enum EBrowserType {
   Chrome,
   Firefox,
 }
-import * as path from 'path';
 import { Builder, Capabilities, WebDriver } from 'selenium-webdriver';
 import * as chrome from 'selenium-webdriver/chrome';
 import * as firefox from 'selenium-webdriver/firefox';
-import { Options } from "selenium-webdriver/firefox";
 const chromeDriver = require('chromedriver');
 import { Context } from './web';
 const geckodriver = require('geckodriver')
@@ -17,27 +15,26 @@ const windowSize = {
   height: 1080,
 };
 
-async function getChromeDriver(): Promise<WebDriver> {
+async function getChromeDriver(context:Context): Promise<WebDriver> {
   const driverPath = chromeDriver.path;
+  let chromeOption = new chrome.Options().windowSize(windowSize).addArguments('--incognito');
+  updateOption(chromeOption, context);
   const driver = await new Builder()
     .withCapabilities(Capabilities.chrome())
     .setChromeService(new chrome.ServiceBuilder(driverPath))
-    .setChromeOptions(
-      new chrome.Options().windowSize(windowSize).addArguments('--incognito'),
-    )
+    .setChromeOptions(chromeOption)
     .build();
   return driver;
 }
 
-async function getFireFoxDriver(): Promise<WebDriver> {
+async function getFireFoxDriver(context:Context): Promise<WebDriver> {
   const driverPath = geckodriver.path
+  let chromeOption = new firefox.Options().windowSize(windowSize).setPreference('browser.privatebrowsing.autostart', true);
+  updateOption(chromeOption, context);
   const driver = await new Builder()
     .withCapabilities(Capabilities.firefox())
     .setFirefoxService(new firefox.ServiceBuilder(driverPath))
-    .setFirefoxOptions(
-      new firefox.Options().windowSize(windowSize)
-        .setPreference('browser.privatebrowsing.autostart', true)
-    )
+    .setFirefoxOptions(chromeOption)
     .build();
   return driver;
 }
@@ -45,17 +42,16 @@ async function getFireFoxDriver(): Promise<WebDriver> {
 export async function getWebDriver(context: Context): Promise<WebDriver> {
   switch (context.browser) {
     case EBrowserType.Chrome:
-      return getChromeDriver();
+      return getChromeDriver(context);
     case EBrowserType.Firefox:
-      return getFireFoxDriver();
+      return getFireFoxDriver(context);
     default:
       throw new Error(`Not support type ${context}.`);
   }
 }
 
-function getOptions(context: Context) {
-  let option = new Options();
-  option.addArguments('disable-infobars');
+function updateOption(option:any, context: Context) {
+  //option.addArguments('disable-infobars');
   option.addArguments("--use-fake-ui-for-media-stream=1");
   if (context.headless) {
     option.addArguments('--headless');
