@@ -23,23 +23,11 @@ function parseCommand(): IObject {
         .option('-f, --file <path>', 'path of the test file')
         .option('-l, --line <line_number>', 'It will execute that number only.')
         .parse(process.argv);
-
-    // For test uncomment this line and run <node bin/cmd.js>
-    program.server = "simplestore.dipankar.co.in"
-    program.file = "/Users/dip/dipankar/node-fest/src/ws/sample.txt"
-    //program.line = 13;
-    if (program.server) {
-        //console.log("Server:"+program.server);
-        context.server = program.server;
-    } else {
-        console.log("You must pass a URL: (node index.js -s google.com -f ./sample.txt )");
-    }
-    if (program.file) {
-        //console.log("File:" + program.file);
-        context.file = program.file;
-    } else {
-        console.log("You must pass a filepath: (node index.js -s google.com -f ./sample.txt )");
-    }
+    
+    context.file = program.file
+    context.server = program.server
+    // debug override
+    // context.file = "/Users/dip/dipankar/node-fest/src/ws/sample.txt"
     return context;
 }
 
@@ -77,10 +65,10 @@ async function runAllTestCase(testcase: Array<TestCase>) {
     for (let tc of testcase) {
         // replace arguments
         tc.arguments = tc.arguments.map(x => render(x, context))
-        console.log(chalk.hex('#454545')(util.format("\n[TEST/%s] Executing: %s, %s", tc.line, tc.command, tc.arguments)));
+        console.log(chalk.hex('#454545')(util.format("\n[%s] Executing: %s, %s", tc.line, tc.command, tc.arguments)));
         switch (tc.command) {
             case 'sleep':
-                console.log(chalk.blue(util.format('[INFO/%s] Sleeping %o', tc.line, tc.arguments[0])));
+                console.log(chalk.blue(util.format('[%s][INFO] Sleeping %o', tc.line, tc.arguments[0])));
                 await sleep(parseInt(tc.arguments[0]))
                 break;
             case 'context':
@@ -140,7 +128,13 @@ async function runAllTestCase(testcase: Array<TestCase>) {
 
 // building testcase from file.
 function buildTestFromFile(filepath: string): TestCase[] {
-    var contents = fs.readFileSync(filepath, 'utf8');
+    var contents =""
+    try{
+        contents = fs.readFileSync(filepath, 'utf8');
+    } catch (err){
+        throw new Error("[Error] You must pass the test-file path in the command like -f ./textcase.txt")
+    }
+
     var lines = contents.split("\n");
     let result = Array<TestCase>();
     for (var i = 0; i < lines.length; i++) {

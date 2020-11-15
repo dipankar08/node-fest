@@ -14,7 +14,7 @@ export class Result{
     markPass(tc?:TestCase){
         this.pass_count++
         if(tc){
-            console.log(chalk.red(`[${tc.line}][PASS] TEST PASS :)`));
+            console.log(chalk.green(`[${tc.line}][PASS] TEST PASS :)`));
         }
     }
     markFail(tc?:TestCase, msg?:string){
