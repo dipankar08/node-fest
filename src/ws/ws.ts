@@ -27,7 +27,7 @@ function parseCommand(): IObject {
     context.file = program.file
     context.server = program.server
     // debug override
-    // context.file = "/Users/dip/dipankar/node-fest/src/ws/sample.txt"
+     //context.file = "/Users/dip/dipankar/node-fest/src/ws/sample.txt"
     return context;
 }
 
@@ -59,26 +59,48 @@ function connect(url: string) {
 }
 
 
+function checkReadFromQueue(tc:TestCase, con_id:string, expected:string, result:Result){
+        let con = globalConnectionMap.get(tc.arguments[0])
+        assert(con != undefined, "WS connecting doesn't exist");
+        if(con!.msg.length == 0 && expected == 'no data'){
+            result.markPass(tc)
+            return;
+        }
+        assert(con?.msg.length != 0, `No message exist but expected:<${expected}>`)
+        let msg:string = con!.msg.shift() as string
+        let result1 = regexMatch(expected, msg) as boolean
+        if(result1){
+            result.markPass(tc)
+        } else{
+            throw Error(`Not found expected message but expected:<${tc.arguments[1]}>, observed:<${msg}>`)
+        }
+}
+
 // executing test case...
 async function runAllTestCase(testcase: Array<TestCase>) {
     let result: Result = new Result();
     for (let tc of testcase) {
         // replace arguments
         tc.arguments = tc.arguments.map(x => render(x, context))
-        console.log(chalk.hex('#454545')(util.format("\n[%s] Executing: %s, %s", tc.line, tc.command, tc.arguments)));
+        result.markExecuting(tc);
         switch (tc.command) {
             case 'sleep':
-                console.log(chalk.blue(util.format('[%s][INFO] Sleeping %o', tc.line, tc.arguments[0])));
+                console.log(chalk.blue(util.format('[INFO][%s] Sleeping %o', tc.line, tc.arguments[0])));
                 await sleep(parseInt(tc.arguments[0]))
                 break;
             case 'context':
                 context[tc.arguments[0]] = tc.arguments[1]
+                console.log(chalk.blue(util.format('[INFO][%s] Context Set: now %s', tc.line, JSON.stringify(context))));
                 break;
             case 'connect':
                 try {
-                    var conn_id = await connect(tc.arguments[0])
+                    var conn_id = await connect(tc.arguments[0]) as string
                     context[tc.arguments[1]] = conn_id;
+                    console.log(chalk.blue(util.format('[INFO][%s] Context Set: now %s', tc.line, JSON.stringify(context))));
                     result.markPass(tc)
+                    if(tc.arguments.length > 2){
+                        checkReadFromQueue(tc, conn_id, tc.arguments[2],result)
+                    }
                 } catch (err) {
                     result.markFail(tc, err.message);
                 }
@@ -90,6 +112,9 @@ async function runAllTestCase(testcase: Array<TestCase>) {
                     con?.ws.close()
                     await sleepMS(500);
                     result.markPass(tc)
+                    if(tc.arguments.length > 1){
+                        checkReadFromQueue(tc, tc.arguments[0], tc.arguments[1],result)
+                    }
                 } catch (err) {
                     result.markFail(tc, err.message);
                 }
@@ -101,22 +126,16 @@ async function runAllTestCase(testcase: Array<TestCase>) {
                     con?.ws.send(tc.arguments[1])
                     await sleepMS(100);
                     result.markPass(tc)
+                    if(tc.arguments.length > 2){
+                        checkReadFromQueue(tc, tc.arguments[0], tc.arguments[2],result)
+                    }
                 } catch (err) {
                     result.markFail(tc, err.message);
                 }
                 break;
             case 'check_recv':
                 try {
-                    let con = globalConnectionMap.get(tc.arguments[0])
-                assert(con != undefined, "WS connecting doesn't exist");
-                    assert(con?.msg.length != 0, `No message exist but expected:<${tc.arguments[1]}>`)
-                    let msg:string = con!.msg.shift() as string
-                    let result1 = regexMatch(tc.arguments[1], msg) as boolean
-                    if(result1){
-                        result.markPass(tc)
-                    } else{
-                         throw Error(`No message exist but expected:<${tc.arguments[1]}>, observed:<${msg}>`)
-                    }
+                    checkReadFromQueue(tc, tc.arguments[0], tc.arguments[1], result)
                 } catch (err) {
                     result.markFail(tc, err.message);
                 }

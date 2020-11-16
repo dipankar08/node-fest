@@ -1,6 +1,6 @@
 {
   "name": "node-fest",
-  "version": "2.0.18",
+  "version": "2.0.21",
   "description": "The best productive test framework",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

@@ -5,6 +5,9 @@ const chalk = require('chalk');
 const format = require('string-format')
 
 export class Result{
+    markExecuting(tc: TestCase) {
+        console.log(chalk.hex('#454545')(util.format("\n[INFO][%s] Executing: %s, %s", tc.line, tc.command, tc.arguments)));
+    }
     pass_count:number  = 0
     fail_count:number =  0
     total_count:number = 0
@@ -14,13 +17,13 @@ export class Result{
     markPass(tc?:TestCase){
         this.pass_count++
         if(tc){
-            console.log(chalk.green(`[${tc.line}][PASS] TEST PASS :)`));
+            console.log(chalk.green(`[PASS][${tc.line}] TEST PASS :)`));
         }
     }
     markFail(tc?:TestCase, msg?:string){
         this.fail_count++
         if(tc && msg){
-            console.log(chalk.red(`[${tc.line}][FAIL] Test case failed: ${JSON.stringify(tc)}, msg: ${msg}`));
+            console.log(chalk.red(`[FAIL][${tc.line}] Test case failed: ${JSON.stringify(tc)}, msg: ${msg}`));
         }
     }
     printResult(){

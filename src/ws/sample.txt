@@ -7,12 +7,11 @@
 
 ## Send the message on first websocket
 ## And verify other two connection got the resp
-=> send => {{id1}} => payload-A1
+=> send => {{id1}} => payload-A1 =>  payload-A1
 => send => {{id1}} => payload-A2
 => send => {{id2}} => payload-B1
 => send => {{id3}} => payload-C1
 
-=> check_recv => {{id1}} => payload-A1
 => check_recv => {{id1}} => payload-A2
 => check_recv => {{id2}} => payload-B1
 => check_recv => {{id3}} => payload-C1
