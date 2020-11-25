@@ -11,10 +11,17 @@
 => send => {{id1}} => payload-A2
 => send => {{id2}} => payload-B1
 => send => {{id3}} => payload-C1
+=> debug
 
 => check_recv => {{id1}} => payload-A2
 => check_recv => {{id2}} => payload-B1
 => check_recv => {{id3}} => payload-C1
+
+=> send => {{id1}} => payload-A10
+=> send => {{id1}} => payload-A11
+=> send => {{id1}} => payload-A12
+
+=> check_recv => {{id1}} => A10 => A11 => A12
 
 ## disconnect all websocket
 => disconnect => {{id1}}

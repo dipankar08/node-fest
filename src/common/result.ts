@@ -14,14 +14,18 @@ export class Result{
     constructor(){
 
     }
-    markPass(tc?:TestCase){
+    markPass(tc:TestCase){
+        if(!tc.is_setup){
         this.pass_count++
+        }
         if(tc){
             console.log(chalk.green(`[PASS][${tc.line}] TEST PASS :)`));
         }
     }
-    markFail(tc?:TestCase, msg?:string){
+    markFail(tc:TestCase, msg?:string){
+        if(tc.is_setup){
         this.fail_count++
+        }
         if(tc && msg){
             console.log(chalk.red(`[FAIL][${tc.line}] Test case failed: ${JSON.stringify(tc)}, msg: ${msg}`));
         }

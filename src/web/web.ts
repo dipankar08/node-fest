@@ -261,10 +261,10 @@ async function executeTestCase(TestCaseList: any, driver: any, context: any) {
                     default:
                         assert(false, `[${cmd1.line}] Invalid command: <${cmd1.name}>`)
                 }
-                result.markPass()
+                result.markPass({arguments:['a'],is_setup:false, command:'',line:0})
             }
         } catch (err) {
-            result.markFail();
+            result.markFail({line:0, command:'', arguments:[], is_setup:false});
             console.log(chalk.red(`[${cmd1.line}] Fail. Please fix me. Why? ${err}`));
             throw err;
         }
