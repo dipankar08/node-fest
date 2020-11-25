@@ -108,6 +108,8 @@ export abstract class BaseTest {
             if(observed && regexMatch(expected, observed)){
                 ret.markPass(this.cur_tc!);
                 captureContext(expected, observed, this.context);
+            } else {
+                ret.markFail(this.cur_tc!, `Failed due to Response Mismatch: Expected:<${expected}>, observed:<${observed}>`)
             }
         } catch(err){
             ret.markFail(this.cur_tc!, err.message)
@@ -118,17 +120,19 @@ export abstract class BaseTest {
         let data = args[1]
         let expected = args[2]
         try{
-            let observed = this.NetworkCall('GET', url,JSON.stringify(data))
+            let observed = this.NetworkCall('POST', url, JSON.parse(data))
             if(observed && regexMatch(expected, observed)){
                 ret.markPass(this.cur_tc!);
                 captureContext(expected, observed, this.context);
+            } else {
+                ret.markFail(this.cur_tc!, `Failed due to Response Mismatch: Expected:<${expected}>, observed:<${observed}>`)
             }
         } catch(err){
             ret.markFail(this.cur_tc!, err.message)
         }
     }
     
-    NetworkCall(method:'GET'|'POST', url:string, json:string):string {
+    NetworkCall(method:'GET'|'POST', url:string, json:any):string {
         var res = request(method,url , {
             json:json
         });

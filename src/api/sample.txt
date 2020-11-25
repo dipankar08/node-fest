@@ -8,6 +8,6 @@
 => !POST => http://{{server}}/api/test0/create => {"name":"dip","count":1} => "_id":"(?<id2>.*?)"
 => !GET => http://{{server}}/api/test0/find?id={{id1}}  => Find successfully with 1 items
 => GET => http://{{server}}/api/test0/find?id={{id1}}  => success
-=> GET => http://{{server}}/api/test0/find?id={{id2}}  => success
-=> POST => http://{{server}}/api/test0/create => {"idd":"{{id2}}"} => success
+=> GET => http://{{server}}/api/test0/find?id={{id2}}  => success11
+=> POST => http://{{server}}/api/test0/create => {"idd":"{{id2}}"} => success11
 => !GET => http://simplestore.dipankar.co.in/api/system_payment/stripe => TypeError: Cannot read property 'object' of undefined

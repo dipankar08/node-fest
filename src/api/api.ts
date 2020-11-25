@@ -14,7 +14,9 @@ class WSTest extends BaseTest {
         context.file = program.file
         context.server = program.server
         // debug override
-        // context.file = "/Users/dip/dipankar/node-fest/src/api/sample.txt"
+        if(process.env.vs_debug == "true"){
+          context.file = "/Users/dip/dipankar/node-fest/src/api/sample.txt"
+        }
         return context;
     }
 

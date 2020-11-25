@@ -1,4 +1,6 @@
 
+const util = require('util');
+import chalk = require("chalk");
 import request from "sync-request";
 import { IObject } from "../types";
 var namedRegexp = require("named-js-regexp");
@@ -44,6 +46,7 @@ export function captureContext(template:string, string:string, context:IObject):
      // Try Capture Context which will be used lateron.
      if(matched.groups() != null && Object.keys(matched.groups()).length > 0){
         Object.assign(context, matched.groups());
+        console.log(chalk.blue(util.format('[INFO] Context updated: now %s', JSON.stringify(context))));
         return true;
     }
     return false
