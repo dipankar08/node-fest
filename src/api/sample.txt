@@ -1,4 +1,7 @@
 => context => server => simplestore.dipankar.co.in
+=> GET  => http://localhost/api/utils/qr?url=http://google.com&size=100&color=%23ff0000 => \#ff0000
+
+=> context => server => simplestore.dipankar.co.in
 => GET  => http://{{server}}/api/test0/test => 404 - We have not yet support this api
 => POST => http://{{server}}/api/test0/create => {"name":"dip","count":1} => success
 

@@ -11,6 +11,7 @@ export class Result {
     pass_count: number = 0
     fail_count: number = 0
     total_count: number = 0
+    fail_tests:TestCase[] = [];
     constructor() {
 
     }
@@ -29,6 +30,8 @@ export class Result {
         if (tc && msg) {
             console.log(chalk.red(`[FAIL][${tc.line}] Test case failed: ${JSON.stringify(tc)}, msg: ${msg}`));
         }
+        tc.error_msg = msg?.slice(0,300); // just take 300 char
+        this.fail_tests.push(tc)
     }
     printResult() {
         let result = util.format("\n\n\
@@ -46,6 +49,14 @@ export class Result {
         } else {
             console.log(chalk.red(result));
         }
-    }
+        if(this.fail_tests.length > 0){
+            console.log(chalk.red(`
+=====================================================
+   YOU HAVE FAILED TEST! FIX PLEASE BEFORE CHECK IN
+=====================================================            
+${this.fail_tests.map(x=> JSON.stringify(x)).join('\n')}
+=====================================================`));
 
+        }
+    }
 }

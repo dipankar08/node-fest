@@ -4,20 +4,10 @@ import { assert } from "../common/utils";
 import { IObject, TestCase } from "../types";
 var program = require('commander');
 class WSTest extends BaseTest {
-    parseCommand(): IObject {
-        var context: any = {}
-        program
-            .option('-s, --server <url>', 'server endpoints')
-            .option('-f, --file <path>', 'path of the test file')
-            .option('-l, --line <line_number>', 'It will execute that number only.')
-            .parse(process.argv);
-        context.file = program.file
-        context.server = program.server
-        // debug override
-        if(process.env.vs_debug == "true"){
-          context.file = "/Users/dip/dipankar/node-fest/src/api/sample.txt"
-        }
-        return context;
+    modifyContextForDebug() {
+          this.context.file = "/Users/dip/dipankar/node-fest/src/api/sample.txt"
+          //this.context.line = 10;
+          //this.context.limit = 2;
     }
 
     // executing test case...

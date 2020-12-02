@@ -1,6 +1,7 @@
 const fs = require('fs');
 const chalk = require('chalk');
 const util = require('util');
+import { program } from "commander";
 import { IObject, TestCase } from "../types";
 import { Result } from "./result";
 import { captureContext, regexMatch, sleep } from "./utils";
@@ -12,7 +13,28 @@ export abstract class BaseTest {
     result: Result = new Result();
     cur_tc?: TestCase;
 
-    abstract parseCommand(): IObject;
+    modifyContextForDebug() {
+
+    }
+
+    parseCommand() {
+
+        program
+            .option('-s, --server <url>', 'server endpoints')
+            .option('-f, --file <path>', 'path of the test file')
+            .option('-l, --line <line>', 'It will execute that number only.')
+            .option('-lm, --limit <limit>', 'It will execute this many test from that line.')
+            .parse(process.argv);
+        this.context.file = program.file
+        this.context.server = program.server
+        this.context.line = program.line
+        this.context.limit = program.limit
+        // debug override
+        if (process.env.vs_debug == "true") {
+            this.modifyContextForDebug();
+        }
+        console.log(`Context: ${JSON.stringify(this.context)}`)
+    }
     abstract async executeTest(tc: TestCase): Promise<any>;
 
     // building testcase from file.
@@ -33,8 +55,15 @@ export abstract class BaseTest {
             }
             // trim the comments
             if (line.indexOf("#") != -1) {
-                line = line.slice(0, line.indexOf("#")).trim()
+                // You can escape hash by \#
+                if (line[line.indexOf("#") - 1] == '\\') {
+                    // Just replace it with #
+                    line = line.replace("\\#", "#")
+                } else {
+                    line = line.slice(0, line.indexOf("#")).trim()
+                }
             }
+
             if (line.length == 0) {
                 continue;
             }
@@ -43,15 +72,15 @@ export abstract class BaseTest {
             let args = line.split("=>").map(x => x.trim()).filter(y => y.length > 0);
             let command = args[0];
             let is_setup = false
-            if(command.indexOf("!") == 0){
+            if (command.indexOf("!") == 0) {
                 command = command.replace("!", "");
                 is_setup = true;
             }
-            let tc:TestCase = {
+            let tc: TestCase = {
                 line: lineNo,
                 command: command,
                 arguments: args.slice(1),
-                is_setup:is_setup,
+                is_setup: is_setup,
             }
             result.push(tc)
         }
@@ -63,6 +92,7 @@ export abstract class BaseTest {
     }
 
     async runAllTestCase(testcase: Array<TestCase>) {
+        console.log(chalk.blue(`[INFO] Running ${testcase.length} test cases.`));
         this.result = new Result();
         for (let tc of testcase) {
             // replace arguments
@@ -96,54 +126,68 @@ export abstract class BaseTest {
     async main() {
         // Main function
         console.log('Starting API Test...')
-        this.context = this.parseCommand();
+        this.parseCommand();
         let testCases = this.buildTestFromFile(this.context.file);
+        if (this.context.line != undefined) {
+            testCases = testCases.filter(x => x.line >= this.context.line)
+        }
+        if (this.context.limit != undefined) {
+            testCases = testCases.slice(0, this.context.limit);
+        }
         await this.runAllTestCase(testCases);
     }
-    async handleGet(args:string[],ret:Result, ){
+    async handleGet(args: string[], ret: Result,) {
         let url = args[0];
         let expected = args[1]
-        try{
-            let observed = this.NetworkCall('GET', url,'')
-            if(observed && regexMatch(expected, observed)){
+        try {
+            let observed = this.NetworkCall('GET', url, '')
+            if (observed && regexMatch(expected, observed)) {
                 ret.markPass(this.cur_tc!);
                 captureContext(expected, observed, this.context);
             } else {
                 ret.markFail(this.cur_tc!, `Failed due to Response Mismatch: Expected:<${expected}>, observed:<${observed}>`)
             }
-        } catch(err){
+        } catch (err) {
             ret.markFail(this.cur_tc!, err.message)
         }
     }
-    async handlePOST(args:string[],ret:Result ){
+    async handlePOST(args: string[], ret: Result) {
         let url = args[0];
         let data = args[1]
         let expected = args[2]
-        try{
-            let observed = this.NetworkCall('POST', url, JSON.parse(data))
-            if(observed && regexMatch(expected, observed)){
+        try {
+            let observed = this.NetworkCall('POST', url, data)
+            if (observed && regexMatch(expected, observed)) {
                 ret.markPass(this.cur_tc!);
                 captureContext(expected, observed, this.context);
             } else {
                 ret.markFail(this.cur_tc!, `Failed due to Response Mismatch: Expected:<${expected}>, observed:<${observed}>`)
             }
-        } catch(err){
+        } catch (err) {
             ret.markFail(this.cur_tc!, err.message)
         }
     }
-    
-    NetworkCall(method:'GET'|'POST', url:string, json:any):string {
-        var res = request(method,url , {
-            json:json
-        });
-        var resStr =null;
-        try{
-           resStr = res.getBody('utf8');
-        } catch(e){
-           resStr = e.toString();
+
+    NetworkCall(method: 'GET' | 'POST', url: string, json: string): string {
+        if (method == 'POST') {
+            try {
+                json = JSON.parse(json);
+            }
+            catch (err) {
+                return err.message;
+            }
         }
-        if(resStr){
-            if(res.statusCode != 200){
+        var res = request(method, url, {
+            json: json
+        });
+        var resStr = null;
+        try {
+            resStr = res.getBody('utf8');
+        } catch (e) {
+            resStr = e.toString();
+        }
+        if (resStr) {
+            if (res.statusCode != 200) {
                 return `${resStr}(Error Code:${res.statusCode})`;
             } else {
                 return resStr;

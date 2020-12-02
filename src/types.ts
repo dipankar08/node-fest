@@ -3,5 +3,6 @@ export type TestCase = {
     command: string, // get or post
     arguments: string[],
     is_setup:boolean,
+    error_msg?:string,
 };
 export type IObject = { [key: string]: any };

@@ -64,19 +64,12 @@ function dump():string{
 }
 
 class WSTest extends BaseTest {
-    parseCommand(): IObject {
-        var context: any = {}
-        program
-            .option('-s, --server <url>', 'server endpoints')
-            .option('-f, --file <path>', 'path of the test file')
-            .option('-l, --line <line_number>', 'It will execute that number only.')
-            .parse(process.argv);
-        context.file = program.file
-        context.server = program.server
-        // debug override
-        //context.file = "/Users/dip/dipankar/node-fest/src/ws/sample.txt"
-        return context;
-    }
+    modifyContextForDebug() {
+        this.context.file = "/Users/dip/dipankar/node-fest/src/ws/sample.txt"
+        //this.context.line = 10;
+        //this.context.limit = 2;
+  }
+  
     // executing test case...
     async executeTest(tc: TestCase) {
         switch (tc.command) {
