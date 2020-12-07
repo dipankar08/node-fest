@@ -1,6 +1,6 @@
 {
   "name": "node-fest",
-  "version": "2.0.32",
+  "version": "2.0.33",
   "description": "The best productive test framework",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -44,7 +44,7 @@
     "@types/underscore": "^1.10.7",
     "@types/ws": "^7.4.0",
     "chalk": "^4.1.0",
-    "chromedriver": "^85.0.1",
+    "chromedriver": "^87.0.2",
     "commander": "^6.0.0",
     "geckodriver": "^1.20.0",
     "micromustache": "^7.1.0",

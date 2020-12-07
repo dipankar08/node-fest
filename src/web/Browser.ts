@@ -7,15 +7,15 @@ export enum EBrowserType {
 import { Builder, Capabilities, WebDriver } from 'selenium-webdriver';
 import * as chrome from 'selenium-webdriver/chrome';
 import * as firefox from 'selenium-webdriver/firefox';
+import { IObject } from '../types';
 const chromeDriver = require('chromedriver');
-import { Context } from './web';
 const geckodriver = require('geckodriver')
 const windowSize = {
   width: 1920,
   height: 1080,
 };
 
-async function getChromeDriver(context:Context): Promise<WebDriver> {
+async function getChromeDriver(context:IObject): Promise<WebDriver> {
   const driverPath = chromeDriver.path;
   let chromeOption = new chrome.Options().windowSize(windowSize).addArguments('--incognito');
   updateOption(chromeOption, context);
@@ -24,10 +24,10 @@ async function getChromeDriver(context:Context): Promise<WebDriver> {
     .setChromeService(new chrome.ServiceBuilder(driverPath))
     .setChromeOptions(chromeOption)
     .build();
-  return driver;
+  return driver as WebDriver;
 }
 
-async function getFireFoxDriver(context:Context): Promise<WebDriver> {
+async function getFireFoxDriver(context:IObject): Promise<WebDriver> {
   const driverPath = geckodriver.path
   let chromeOption = new firefox.Options().windowSize(windowSize).setPreference('browser.privatebrowsing.autostart', true);
   updateOption(chromeOption, context);
@@ -39,18 +39,18 @@ async function getFireFoxDriver(context:Context): Promise<WebDriver> {
   return driver;
 }
 
-export async function getWebDriver(context: Context): Promise<WebDriver> {
+export async function getWebDriver(context: IObject): Promise<WebDriver> {
   switch (context.browser) {
     case EBrowserType.Chrome:
-      return getChromeDriver(context);
+      return await getChromeDriver(context);
     case EBrowserType.Firefox:
-      return getFireFoxDriver(context);
+      return await getFireFoxDriver(context);
     default:
       throw new Error(`Not support type ${context}.`);
   }
 }
 
-function updateOption(option:any, context: Context) {
+function updateOption(option:any, context: IObject) {
   //option.addArguments('disable-infobars');
   option.addArguments("--use-fake-ui-for-media-stream=1");
   if (context.headless) {
